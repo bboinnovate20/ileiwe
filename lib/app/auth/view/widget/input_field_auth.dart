@@ -42,6 +42,8 @@ class InputFieldAuth extends StatelessWidget {
       StatefulBuilder(
         builder: (context, setState) {
           return TextFormField(
+            
+            
             controller: controller,
             obscureText: isHidden,
             style: const TextStyle(color: Colors.white),
@@ -60,7 +62,7 @@ class InputFieldAuth extends StatelessWidget {
               filled: true,
               focusColor: Colors.white,
               floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, 
-                              color: Colors.white, backgroundColor: Colors.purple),
+                              color: Colors.white),
 
               focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
@@ -87,16 +89,20 @@ class InputFieldAuth extends StatelessWidget {
                                 ,
                 ),
               ),
+              errorBorder:OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red), 
+              borderRadius: BorderRadius.circular(20)) ,
               // errorText: "First Name is required",
-              focusedErrorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: Colors.red
-                  )
-              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor ?? Colors.red), 
+              borderRadius: BorderRadius.circular(20)),
+              
+              errorStyle:  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
 
               fillColor: fillColor ?? Colors.white,
 
             ),
+            
           );
         }
       ):
@@ -113,6 +119,15 @@ class InputFieldAuth extends StatelessWidget {
             cursorColor: Colors.white,
             
             decoration:  InputDecoration(
+                focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor ?? Colors.red), 
+              borderRadius: BorderRadius.circular(20)),
+              
+              errorStyle:  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+
+                errorBorder:OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red), 
+              borderRadius: BorderRadius.circular(20)) ,
             
               contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
               enabledBorder: OutlineInputBorder(
@@ -123,12 +138,7 @@ class InputFieldAuth extends StatelessWidget {
               label: Text(label),
               filled: true,
               
-              floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white, backgroundColor: Colors.purple),
-              focusedErrorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                    color: Colors.red
-                  )
-              ),
+              floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
               border: const OutlineInputBorder(
           
                 borderSide: BorderSide(color: Colors.red, width: 40)),
@@ -136,8 +146,9 @@ class InputFieldAuth extends StatelessWidget {
                   borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
                 borderRadius: BorderRadius.circular(20)),
               fillColor: fillColor ?? Colors.white,
-            
+              
             ),
+            
           ),
         ],
       ) ,

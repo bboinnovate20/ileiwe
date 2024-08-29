@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ButtonOne extends StatelessWidget {
-  const ButtonOne({
+  const 
+  ButtonOne({
     super.key,
     this.action,
     required this.label,
@@ -12,8 +13,12 @@ class ButtonOne extends StatelessWidget {
     this.extend,
     this.padding,
     this.fontSize,
-    this.loading = false
+    this.loading = false,
+    this.width,
+    this.paddingGeo,
+    this.height
   });
+
 
   final void Function()? action;
   final String label;
@@ -24,20 +29,28 @@ class ButtonOne extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? fontSize;
   final bool loading;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? paddingGeo;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: action,
       child: Container(
-        padding: extend == null ? padding ?? const EdgeInsets.symmetric(vertical: 10, horizontal: 80) : const EdgeInsets.symmetric(vertical: 15, horizontal: 90) ,
+        width: width,
+        height: height,
+        padding: paddingGeo ?? (extend == null ? padding ?? const EdgeInsets.symmetric(vertical:15) : const EdgeInsets.symmetric(vertical: 15, horizontal: 90) ),
         decoration: BoxDecoration(
-          color: bgColor ?? const Color.fromARGB(255, 202, 12, 235),
+          color: bgColor ?? Theme.of(context).colorScheme.primary,
           border: border ?? Border.all(width: 1, color: Colors.white),
           borderRadius: BorderRadius.circular(50)
         ),
         child:  loading ? const CupertinoActivityIndicator(color: Colors.white) :
-        Text(label, style: TextStyle(fontSize: fontSize ?? 18, color: textColor ?? Colors.white, fontWeight: FontWeight.bold),),
+        Text(label, style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: fontSize ?? 18, 
+              color: textColor ?? Colors.white),
+              textAlign: TextAlign.center,
+              ),
       ),
     );
   }

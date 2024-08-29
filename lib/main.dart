@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ileiwe/cores/routes.dart';
+import 'package:ileiwe/cores/themes.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+
+void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+  
   runApp( const MyApp());
 }
 
@@ -17,12 +27,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      builder: FToastBuilder(),
       title: 'Ile Ire',
-      theme: ThemeData(
-        bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.transparent),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: fontTheme(),
       
       debugShowCheckedModeBanner: false,
       routerConfig: router,     

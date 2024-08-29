@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 
 class OnboardingButtonInfo extends StatefulWidget {
@@ -61,7 +62,7 @@ class _OnboardingButtonInfoState extends State<OnboardingButtonInfo> with Single
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height /2,
+      height: MediaQuery.of(context).size.height /2.1,
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(20),
       // color: Colors.purple,
@@ -114,11 +115,11 @@ class _OnboardingButtonInfoState extends State<OnboardingButtonInfo> with Single
                                   borderRadius: BorderRadius.circular(40),
                                   gradient:  LinearGradient(
                                     
-                                    end: Alignment.center,
+                                    end: Alignment.centerLeft,
                                     stops: const [0.2,0.2,  1],
-                                    begin: Alignment.bottomCenter,
+                                    begin: Alignment.centerRight,
                                     colors: widget.gradient),
-                                  color: Colors.purple,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 height: MediaQuery.of(context).size.height /2.5,
                                 // width: 20,
@@ -156,21 +157,23 @@ class MainContent extends StatelessWidget {
     return   Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-         Text(title, style: const TextStyle(fontSize:37, 
-            fontWeight: FontWeight.bold, height: 1.2,
-            color: Colors.white,
+         
+         Text(title, style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Colors.white),
             
-            ), 
-            
-            textAlign: TextAlign.center,),
+            textAlign: TextAlign.center,).animate().fadeIn(duration: 800.ms),
       // RichText(text: const TextSpan(children: [])),
          Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Text(subTitle, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white, height: 1.2), textAlign: TextAlign.center),
+          child: Text(subTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, height: 1.4), textAlign: TextAlign.center),
         ),
         Padding(
-          padding: const EdgeInsets.only(top:15.0),
-          child: ButtonOne(action: action, label: actionLabel, bgColor: actionbgColor, textColor: actionTextColor,),
+          padding: const EdgeInsets.only(top:20.0),
+          child: ButtonOne(action: action, 
+            paddingGeo: const EdgeInsets.symmetric(vertical: 10),
+                width: 220,
+                
+                // height: 100,
+                label: actionLabel, bgColor: actionbgColor, textColor: actionTextColor,),
         ),
       ],
     );

@@ -1,13 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ileiwe/app/auth/view/login_screen.dart';
 import 'package:ileiwe/app/auth/view/widget/custom_selection.dart';
 import 'package:ileiwe/app/auth/view/widget/header_content_auth.dart';
 import 'package:ileiwe/app/auth/view/widget/input_field_auth.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 import 'package:ileiwe/constant/routes.dart';
+import 'package:ileiwe/cores/common/widgets/customer_container.dart';
 import 'package:ileiwe/cores/validator.dart';
 
 class KidDetailScreen extends StatelessWidget {
@@ -20,24 +19,20 @@ class KidDetailScreen extends StatelessWidget {
 
     final formKey = GlobalKey<FormState>();
 
-    return  Scaffold(
-     
-
-      backgroundColor: Colors.purple,
-      appBar: AppBar(
-        leadingWidth: 60,
-        toolbarHeight: 50,
-        backgroundColor: Colors.transparent,
-        leading: Container(
-          
-          decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(15)),
-          
-          margin: const EdgeInsets.only(top: 10, left: 20),
-          child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),),
+    return  ContainerCustom(
       
-      body: CustomScrollView(
+      child: CustomScrollView(
+
         slivers: [
           SliverList.list(children: [
+            const SizedBox(height: 50,)  ,
+            const HeaderContentAuth(
+              right: -60,
+              top: -10,
+              imageHeight: 200,
+                      imageName: 'write_message',
+                      mainHeader: "Basic Info", 
+                      content: "Help us know more\nabout your kid's\npersonality"),
             Form(
             key: formKey,
             child: Container(
@@ -46,8 +41,7 @@ class KidDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const HeaderContentAuth(mainHeader: "Basic Info", 
-                      content: "Help us know more\nabout your kid's\npersonality"),
+                  
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
                   InputFieldAuth(
@@ -117,7 +111,10 @@ class KidDetailScreen extends StatelessWidget {
         
       ),
 
-       
-    );
+      
+      
+      );
+    
+    
   }
 }

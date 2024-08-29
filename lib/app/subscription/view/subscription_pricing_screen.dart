@@ -1,14 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:ileiwe/app/auth/view/login_screen.dart';
 import 'package:ileiwe/app/auth/view/widget/header_content_auth.dart';
-import 'package:ileiwe/app/auth/view/widget/input_field_auth.dart';
-import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 import 'package:ileiwe/app/subscription/view/widgets/premium_card.dart';
-import 'package:ileiwe/constant/routes.dart';
-import 'package:ileiwe/cores/validator.dart';
+import 'package:ileiwe/cores/common/widgets/customer_container.dart';
 
 class SubscriptionPricingScreen extends StatelessWidget {
   const SubscriptionPricingScreen({super.key});
@@ -48,27 +42,16 @@ class SubscriptionPricingScreen extends StatelessWidget {
       "Access to Exclusive Content days book rentals",  
     ];
 
-    return  Scaffold(
-     
-
-      backgroundColor: Colors.purple,
-      appBar: AppBar(
-        leadingWidth: 60,
-        toolbarHeight: 50,
-        backgroundColor: Colors.transparent,
-        leading: GestureDetector(
-          onTap: () => context.pop(),
-          child: Container(
-            
-            decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(15)),
-            
-            margin: const EdgeInsets.only(top: 10, left: 20),
-            child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),
-        ),),
+    return  ContainerCustom(
       
-      body: CustomScrollView(
+      child:       CustomScrollView(
         slivers: [
           SliverList.list(children: [
+                        const SizedBox(height: 50,) ,                    
+            const HeaderContentAuth(
+                    imageName: 'award',
+                    mainHeader: "Subscription", content: "Unlock endless fun\nby learning with\npremium"),
+
             Form(
             key: formKey,
             child: Container(
@@ -77,7 +60,7 @@ class SubscriptionPricingScreen extends StatelessWidget {
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  HeaderContentAuth(mainHeader: "Subscription", content: "Unlock endless fun\nby learning with\npremium"),
+                  
                   SizedBox(height: 20),
                   SizedBox(height: 20),
 
@@ -97,9 +80,9 @@ class SubscriptionPricingScreen extends StatelessWidget {
           ])
         ],
         
-      ),
-
-       
-    );
+      ),);
+    
+    
+    
   }
 }

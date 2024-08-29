@@ -1,12 +1,13 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/view/widget/header_content_auth.dart';
 import 'package:ileiwe/app/auth/view/widget/input_field_auth.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
-import 'package:ileiwe/app/welcome/splash_screen_controller.dart';
+
 import 'package:ileiwe/constant/routes.dart';
+import 'package:ileiwe/cores/common/widgets/customer_container.dart';
 import 'package:ileiwe/cores/validator.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class LoginScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     void submitLogin() {
-      print("validating");
+      
        if(formKey.currentState!.validate()){
         print('validated');
        }
@@ -31,70 +32,24 @@ class LoginScreen extends StatelessWidget {
         // }
     }
 
-    return  Scaffold(
-     
-
-      backgroundColor: Colors.purple,
-      appBar: AppBar(
-        leadingWidth: 60,
-        toolbarHeight: 50,
-        backgroundColor: Colors.transparent,
-        // leading: Container(
+    return  
+    
+    ContainerCustom(
+      appBar:Container(
           
-        //   decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(15)),
-          
-        //   margin: const EdgeInsets.only(top: 10, left: 20),
-        //   child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),
-          
-          ),
-      body: Container(
-        margin: const EdgeInsets.only(right: 20, left: 20, top: 15 ),
-        child:  Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const HeaderContentAuth(mainHeader: "Let's go Sign In", content: "Welcome back\nGlad to see you\nback"),
-              const SizedBox(height: 20),
-              const SizedBox(height: 20),
-              InputFieldAuth(
-                fillColor: Colors.white30,
-                textColor: Colors.white,
-                label: "Username or email", 
-                validator: (value) => isValidName(value!, field: "Invalid Name"), 
-                controller: usernameController),
-              InputFieldAuth(
-                
-                fillColor: Colors.white30,
-                textColor: Colors.white,
-                isSecured: true,
-                label: "Password", 
-                otherSuffix:  const Padding(
-                  padding: EdgeInsets.only(right:15.0),
-                  child: Text('Forgot?', style: TextStyle(fontWeight: FontWeight.bold, 
-                              fontSize: 15,
-                              color: Colors.white),),
-                ),
-                validator: (value) => isValidName(value!, field: "Invalid Name"), 
-                controller: passwordController),
-               
-
-
-              // alternative logins
-
-              const AlternativeLogin()
-            ],
-          ),
-        ),
-      ),
-
-       bottomSheet: Container(
+          decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.all(5),
+          margin: const EdgeInsets.only(top: 10, left: 20),
+          child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),
+       
+    
+      bottomSheet: Container(
         margin: const EdgeInsets.only(bottom: 50),
          child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             InkWell(
-              onTap: ()  => context.go(RoutesName.register),
+              onTap: ()  => context.push(RoutesName.register),
               child: RichText(text: const TextSpan(
                 text: "Don't have an account? ",
                 children: [
@@ -103,11 +58,77 @@ class LoginScreen extends StatelessWidget {
               ])),
             ),
             const SizedBox(height: 20),
-            ButtonOne(label: "Sign In", action: () => submitLogin(), border: Border.all(width: 0), bgColor: const Color.fromARGB(255, 255, 6, 255),)
+            ButtonOne(label: "Sign In", 
+            width: 250,
+            action: () => submitLogin(), border: Border.all(width: 0))
           ],
                ),
-       ),
-    );
+       ),child: Column(
+        children: [
+          const HeaderContentAuth(mainHeader: "Let's go Sign In", 
+            imageName: 'reading_kid_ladies',
+            content: "Welcome back\nGlad to see you\nback"),
+          Container(
+            margin: const EdgeInsets.only(right: 20, left: 20 ),
+            child:  Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 40),
+                  
+                  InputFieldAuth(
+                    fillColor: Colors.white30,
+                    textColor: Colors.white,
+                    label: "Username or email", 
+                    validator: (value) => isValidName(value!, field: "Invalid Name"), 
+                    controller: usernameController),
+                  InputFieldAuth(
+                    
+                    fillColor: Colors.white30,
+                    textColor: Colors.white,
+                    isSecured: true,
+                    label: "Password", 
+                    validator: (value) => isValidPassword(value!), 
+                    otherSuffix:  const Padding(
+                      padding: EdgeInsets.only(right:15.0),
+                      child: Text('Forgot?', style: TextStyle(fontWeight: FontWeight.bold, 
+                                  fontSize: 15,
+                                  color: Colors.white),),
+                    ),
+                    controller: passwordController),
+                   
+          
+          
+                  // alternative logins
+          
+                  const AlternativeLogin()
+                ],
+              ),
+            ),
+          ),
+        ],
+             ),
+);
+    // Scaffold(
+     
+
+    //   backgroundColor: Colors.purple,
+    //   appBar: AppBar(
+    //     leadingWidth: 60,
+    //     toolbarHeight: 50,
+    //     backgroundColor: Colors.transparent,
+    //     // leading: Container(
+          
+    //     //   decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(15)),
+          
+    //     //   margin: const EdgeInsets.only(top: 10, left: 20),
+    //     //   child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),
+    //       ),
+    //   body: 
+      
+    //    bottomSheet: 
+    // );
   }
 }
 

@@ -7,6 +7,10 @@ String? isValidName(String name, {String field='Name'}) {
   return name.length > 3 ? null : 'Please enter valid $field';
 }
 
+String? isValidPhoneNumber(String name, {String field='Phone Number'}) {
+  return name.length >= 10 ? null : 'Please enter valid $field';
+}
+
 String? isValidPassword(String text, {int length = 5}) {
   return text.length >= length ? null : 'Password must be greater than $length';
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "271256550384",
+    "project_id": "ileiwe-bf26a",
+    "storage_bucket": "ileiwe-bf26a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271256550384:android:cd6fcc50ad6977efcbfb35",
+        "android_client_info": {
+          "package_name": "com.ileiwe.ileiwe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUqb8m0Ts4Y1cx32swAfs2S3lbdaffkRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
