@@ -7,5 +7,6 @@ abstract class RoutesName {
   static const verifyAccount = "/verify";
   static const kidDetails = "/kid_details";
   static const  subscriptionPricing = "/subscription/pricing";
+  static const  homeDashboard = "/dashboard/home";
 
 }

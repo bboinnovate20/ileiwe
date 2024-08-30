@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
+import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/extension.dart';
 
 class PremiumPricingCard extends StatelessWidget {
@@ -38,7 +40,7 @@ class PremiumPricingCard extends StatelessWidget {
                  Text("$packageName \$$pricing", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),).padding(left: 10)
               ],
             ),
-             ButtonOne(label: purchaseTitle, fontSize: 14, padding: const EdgeInsets.all(10),)
+             ButtonOne(label: purchaseTitle, fontSize: 14, padding: const EdgeInsets.all(10), action: () => context.go(RoutesName.homeDashboard),)
           ],
         ),
         const SizedBox(height: 15),

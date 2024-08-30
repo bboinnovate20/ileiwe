@@ -62,7 +62,7 @@ class _OnboardingButtonInfoState extends State<OnboardingButtonInfo> with Single
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height /2.1,
+      height: MediaQuery.of(context).size.height /2,
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(20),
       // color: Colors.purple,

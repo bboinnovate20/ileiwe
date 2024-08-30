@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ileiwe/cores/routes.dart';
 import 'package:ileiwe/cores/themes.dart';
@@ -15,7 +16,7 @@ void main() async {
           options: DefaultFirebaseOptions.currentPlatform,
         );
   
-  runApp( const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -1,6 +1,8 @@
 
+import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ileiwe/app/auth/model/data/kid_info.dart';
 import 'package:ileiwe/app/auth/model/data/login.dart';
@@ -35,44 +37,60 @@ class AuthRemoteDataSource {
 
 class FirebaseAuthDataSource implements AuthRemoteDataSource {
   
-  const FirebaseAuthDataSource({required this.instance});
+  const FirebaseAuthDataSource({required this.instance, required this.db_instance});
 
   final FirebaseAuth instance;
+  final FirebaseFirestore db_instance;
 
   
 
   @override
   Future<ReturnedStatus> registerUser(Register userPersonAccountDetail) async {
       try {
-          final credential = await instance.createUserWithEmailAndPassword(
-            email: userPersonAccountDetail.email,
-            password: userPersonAccountDetail.password,
-          );
-          print(credential);
-          final response = addUserToDB(userPersonAccountDetail,credential.user?.uid);
-          print(response);
-          if(response.success){
 
-            await credential.user?.updateDisplayName("${userPersonAccountDetail.firstName} ${userPersonAccountDetail.lastName}");
+            final UserCredential credential = await instance.createUserWithEmailAndPassword(
+                email: userPersonAccountDetail.email,
+                password: userPersonAccountDetail.password,
+            );
             
-            return ReturnedStatus(
-              message: 'Successfully created user Account', 
-              success: true, otherData: {'user': credential.user});
-          }
+            
+             await instance.currentUser?.updateDisplayName("${userPersonAccountDetail.firstName} ${userPersonAccountDetail.lastName}");
+             await instance.currentUser?.reload();
 
+            
+            final response = await addUserToDB(userPersonAccountDetail, credential.user?.uid);
+            
+      
 
+            if(response.success) {
+              
+              final phoneNumberVerificationId = await verifyPhoneNumber(userPersonAccountDetail.phoneNumber);
+              
+              print("verified sent");
+
+              print(phoneNumberVerificationId.message);
+
+              return ReturnedStatus(message: "Successfully registerd", success: true, otherData: {
+                'user': instance.currentUser,
+                'phoneNumber': userPersonAccountDetail.phoneNumber,
+                'phoneNumberToken': phoneNumberVerificationId.otherData['phoneNumberToken']
+              });
+              
+            }
 
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
-            return const ReturnedStatus(
+            return  ReturnedStatus(
             message: 'Password is weak', success: false);
           } else if (e.code == 'email-already-in-use') {
-            return const ReturnedStatus(message: 'The account already exists for that email.', success: false);
+            return  ReturnedStatus(message: 'The account already exists for that email.', success: false);
           }
         } catch (e) {
-            return const ReturnedStatus(message: 'Unknown error', success: false);
+            print("unknown error $e");
+            return  ReturnedStatus(message: 'Unknown error', success: false);
         }
-      return const ReturnedStatus(message: 'Unknown error', success: false);
+        print("unknown error no message");
+      return  ReturnedStatus(message: 'Unknown error', success: false);
     
   }
 
@@ -87,15 +105,95 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
 
 
   }
+
+  Future<ReturnedStatus> authenticatePhoneNumber(verificationId, code) async {
+
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: code);
+
+      // Sign the user in (or link) with the credential
+      await instance.signInWithCredential(credential);
+
+      return ReturnedStatus(message: "successful", success: true);
+      
+    } catch (e) {
+      
+      return ReturnedStatus(message: e.toString(), success: false);
+    }
+
+  }
+  
   
   @override
-  registerKid(KidInfo kidInfo, String userId) {
-    // TODO: implement registerKid
-    throw UnimplementedError();
+  Future<ReturnedStatus> registerKid(KidInfo kidInfo, String userId)async {
+
+    final kidInfoJSON = kidInfo.toJson();
+    try {
+        final data = await db_instance.collection('kid_details').doc(userId.toString()).set(kidInfoJSON);
+
+        return  ReturnedStatus(message: 'successful', success: true);
+      
+    } catch (e) {
+      return  ReturnedStatus(message: "$e", success: false);
+    }
+    // throw UnimplementedError();
+  }
+  Future<ReturnedStatus> getKid(String userId)async {
+
+    try {
+        final data = await db_instance.collection('kid_details').doc(userId.toString()).get();
+
+        return  ReturnedStatus(message: "", success: data.exists, otherData: {'data': data.data()});
+      
+    } catch (e) {
+      return  ReturnedStatus(message: "$e", success: false);
+    }
+    // throw UnimplementedError();
   }
 
-  ReturnedStatus addUserToDB(Register useDetail, String? userId) {
-    return const ReturnedStatus(message: 'message', success: true);
+  Future<ReturnedStatus> verifyPhoneNumber(String phoneNumber) async {
+    
+    print('phone number verificaiton');
+
+    final Completer<ReturnedStatus> completer = Completer<ReturnedStatus>();
+
+            
+                await instance.verifyPhoneNumber(
+                      phoneNumber: phoneNumber,
+                      verificationCompleted: (PhoneAuthCredential credentialAuth) async {
+                        print("completed");
+                        completer.complete(ReturnedStatus(message: "completed", success: true));
+                      },
+                      verificationFailed: (FirebaseAuthException e) {
+                        completer.complete(ReturnedStatus(message: "failed to send code", success: false));
+                      },
+                      codeSent:  (String verificationId, int? resendToken) async {
+                        completer.complete(ReturnedStatus(message: "sent", success: true, otherData: {'phoneNumberToken': verificationId}));
+                      },
+                      codeAutoRetrievalTimeout: (String verificationId) {},
+                );
+                
+
+            return completer.future;
+  }
+
+  Future<ReturnedStatus> addUserToDB(Register userDetail, String? userId) async {
+    
+
+    try {
+        await db_instance.collection('user_details').doc(userId.toString()).set({'phoneNumber': userDetail.phoneNumber });
+        print("successfull");
+        return  ReturnedStatus(message: 'successful', success: true);
+      
+    } catch (e) {
+      return  ReturnedStatus(message: "$e", success: false);
+    }
+    //  final DocumentReference getUserBusinessDoc = database.collection(DatabaseCollection.userBusinessColl).doc(userId.toString());
+    //     final getBusinessDetails = await getUserBusinessDoc.get();
+
+    //     final getUserBusinessData = getBusinessDetails.data() as Map<String, dynamic>;
+        
+    //     if(getUserBusinessData.isEmpty) {
   }
 }
 

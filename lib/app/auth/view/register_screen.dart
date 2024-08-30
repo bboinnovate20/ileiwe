@@ -19,9 +19,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  @override
-  Widget build(BuildContext context) {
-    
+
 
     final TextEditingController firstNameController = TextEditingController();
     final TextEditingController lastNameController = TextEditingController();
@@ -32,45 +30,55 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     final formKey = GlobalKey<FormState>();
     
-    AuthController authController = AuthController(ref: ref);
+    late AuthController authController;
 
     bool loading = false;
     
     void submit()async { 
-      if(formKey.currentState!.validate()) {
-          setState(() {
-            loading = true;
-          });
-        final data = {
-            'firstName': firstNameController.value.toString(),
-            'lastName': lastNameController.value.toString(),
-            'email': emailController.value.toString(),
-            'phoneNumber': phoneNumberController.value.toString(),
-            'password': passwordController.value.toString(),
-            'passwordConfirmation': passwordConfirmationController.value.toString(),
-        };
+      if (formKey.currentState!.validate()) {
+        setState(() {
+          loading = true;
+        });
 
-          setState(() {
-            loading = false;
-          });
+        final data = {
+          'firstName': firstNameController.value.text.split(" ")[0],
+          'lastName': lastNameController.value.text.split(" ")[0],
+          'email': emailController.value.text,
+          'phoneNumber': phoneNumberController.value.text,
+          'password': passwordController.value.text,
+          'passwordConfirmation': passwordConfirmationController.value.text,
+        };
 
         final result = await authController.register(data);
 
-        if(result.success) {
-          CustomToast(Navigator.of(context)).showErrorMessage(result.message);
-        }
-        else {
+        if (result.success) {
+          
           CustomToast(Navigator.of(context)).showSuccessMessage(result.message);
+
+          Future.delayed(const Duration(seconds: 1), () {
+            if (context.mounted) {
+              context.push("${RoutesName.verifyAccount}/${result.otherData['phoneNumberToken']}");
+            }
+          });
+          setState(() {loading = false;});
+        } else {
+          
+          CustomToast(Navigator.of(context)).showErrorMessage(result.message);
+          setState(() {loading = false;});
         }
-    
       }
 
     }
 
-    
+    @override
+    void initState() {
+      super.initState();
+      authController = AuthController(ref: ref);
+    }
 
-
-
+    @override
+    Widget build(BuildContext context) {
+      
     return  ContainerCustom(
              appBar:Container(    
               decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(12)),
@@ -146,8 +154,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ButtonOne(label: "Sign Up", 
                   loading: loading,
                   extend: true, 
-                  // action: ()=> submit(), 
-                  action: ()=>context.go(RoutesName.verifyAccount), 
+                  action: () => submit(),
+                   
+                  // action: ()=>context.go(RoutesName.verifyAccount), 
+                  // action: ()=> context.go("${RoutesName.verifyAccount}/hello"), 
                 
                 border: Border.all(width: 0), bgColor: const Color.fromARGB(255, 255, 6, 255),),
                 

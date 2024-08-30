@@ -5,6 +5,7 @@ import 'package:ileiwe/app/auth/view/kid_detail_screen.dart';
 import 'package:ileiwe/app/auth/view/login_screen.dart';
 import 'package:ileiwe/app/auth/view/register_screen.dart';
 import 'package:ileiwe/app/auth/view/verification_screen.dart';
+import 'package:ileiwe/app/dashboard/view/home_screen.dart';
 import 'package:ileiwe/app/onboarding/view/onboarding_screen.dart';
 import 'package:ileiwe/app/subscription/view/subscription_pricing_screen.dart';
 import 'package:ileiwe/app/welcome/view/splash_screen.dart';
@@ -31,8 +32,8 @@ final router = GoRouter(
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-      path: RoutesName.verifyAccount,
-      builder: (context, state) => const VerificationScreen(),
+      path: "${RoutesName.verifyAccount}/:token",
+      builder: (context, state) =>  VerificationScreen(verifiedToken: state.pathParameters['token'] as String),
     ),
 
     GoRoute(
@@ -43,6 +44,11 @@ final router = GoRouter(
     GoRoute(
       path: RoutesName.subscriptionPricing,
       builder: (context, state) => const SubscriptionPricingScreen(),
+    ),
+
+    GoRoute(
+      path: RoutesName.homeDashboard,
+      builder: (context, state) => const HomeScreen(),
     ),
    
   ],);

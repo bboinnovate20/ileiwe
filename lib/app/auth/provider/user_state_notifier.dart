@@ -11,11 +11,11 @@ part 'user_state_notifier.g.dart';
 class UserStateNotifier extends _$UserStateNotifier{
   
   @override
-  UserInfo build() {
-    return  UserInfo(isAuthenticated: false, userId: "", firstName: "", lastName: "", email: "", isEmailVerified: false);
+  UserDetailInfo build() {
+    return  UserDetailInfo(isAuthenticated: false, phoneNumber: "", isPhoneNumberVerified: false, userId: "", firstName: "", lastName: "", email: "", isEmailVerified: false);
   }
 
-   update(UserInfo newUpdate) {
+   update(UserDetailInfo newUpdate) {
     state = newUpdate;
   }
 }

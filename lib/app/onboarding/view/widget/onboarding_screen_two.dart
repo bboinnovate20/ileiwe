@@ -35,7 +35,7 @@ class OnboardingScreenTwo extends StatelessWidget {
                       margin: const EdgeInsets.all(10),
                       child: Align(
                         alignment: Alignment.topCenter,
-                        child: Image.asset('assets/images/kid_brick_book.png', fit: BoxFit.cover, height: 350,)
+                        child: Image.asset('assets/images/kid_brick_book.png', fit: BoxFit.cover, height: 320,)
                         .animate().shimmer(duration: 700.ms).scale(duration: 1000.ms, begin: const Offset(0.8, 0.8), end: const Offset(1, 1))),
                     ),
                   ),

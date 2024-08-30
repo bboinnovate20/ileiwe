@@ -5,6 +5,7 @@ class AppTheme {
     static final theme =  ThemeData(
         useMaterial3: true,
         bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.transparent),
+        appBarTheme: const AppBarTheme(color: Colors.transparent,),
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF7A00AA),
           primary: const Color(0xFFFF5CFA),
@@ -22,6 +23,15 @@ class AppTheme {
     ThemeData customFontTheme(TextTheme textTheme) {
         return theme.copyWith(
           textTheme: textTheme.copyWith(
+            titleLarge: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: Colors.black
+            ),
+            titleSmall: GoogleFonts.poppins(
+              fontWeight: FontWeight.w700,
+              color: Colors.black
+            ),
+            
             // bodyMedium: GoogleFonts.gabarito(
             //   fontSize: 16,
             //   color: Colors.black

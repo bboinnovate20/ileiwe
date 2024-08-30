@@ -19,7 +19,7 @@ class CustomSelectionField extends StatefulWidget {
     });
 
 
-  final void Function(int?) onChangedValue;
+  final void Function(String?) onChangedValue;
   final List<Map<String, dynamic>> options;
   final String label;
   final double bottomMargin;
@@ -40,7 +40,7 @@ class _CustomSelectionFieldState extends State<CustomSelectionField> {
       List<DropdownMenuItem> dropDownList = [];
 
       options.every((element) {
-        dropDownList.add(DropdownMenuItem(value: element['id'], child: Text(element['name'], style: TextStyle(color: selectedValue == element['id'] ? Colors.white : Colors.black), )));
+        dropDownList.add(DropdownMenuItem(value: element['name'], child: Text(element['name'], style: TextStyle(color: selectedValue == element['id'] ? Colors.white : Colors.black), )));
         return true;
       });
 
@@ -117,7 +117,7 @@ class CustomSelectionCupertinoFormField extends FormField<Map<String, dynamic>> 
 
   final String title;
   final List<Map<String, dynamic>> options;
-  final void Function(int?) onChangedValue;
+  final void Function(String?) onChangedValue;
   
 
 }
@@ -131,7 +131,7 @@ class CustomSelectionCupertino extends StatelessWidget {
 
   final String title;
   final List<Map<String, dynamic>> options;
-  final void Function(int?) onChangedValue;
+  final void Function(String?) onChangedValue;
   final FormFieldState state;
 
   @override
@@ -142,7 +142,7 @@ class CustomSelectionCupertino extends StatelessWidget {
       onTap: () async  {
           final value = await _showActionSheet(context);
           state.didChange(value);
-          onChangedValue(state.value['id']);
+          onChangedValue(state.value['name']);
       }
       ,
       child: Container(

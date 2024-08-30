@@ -15,6 +15,9 @@ class ContainerCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       floatingActionButton: appBar != null ? SafeArea(
         child: Container(
           margin: EdgeInsets.only(top: MediaQuery.paddingOf(context).top * 2.2, left: 20),

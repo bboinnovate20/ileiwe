@@ -7,18 +7,21 @@ part 'user_info.freezed.dart';
 part 'user_info.g.dart';
 
 @unfreezed
-class UserInfo with _$UserInfo {
-   factory UserInfo({
+class UserDetailInfo with _$UserDetailInfo {
+   factory UserDetailInfo({
     required bool isAuthenticated,
     required String userId,
     required String firstName,
     required String lastName,
     required String email,
+    required String phoneNumber,
+    required bool isPhoneNumberVerified,
     required bool isEmailVerified,
-    //  KidInfo? kidInfo
+     
+    KidInfo? kidInfo
 
-  }) = _UserInfo;
+  }) = _UserDetailInfo;
 
-  factory UserInfo.fromJson(Map<String, Object?> json)
-      => _$UserInfoFromJson(json);
+  factory UserDetailInfo.fromJson(Map<String, Object?> json)
+      => _$UserDetailInfoFromJson(json);
 }
