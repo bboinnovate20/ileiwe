@@ -1,6 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:ileiwe/app/auth/model/data/kid_info.dart';
+import 'package:ileiwe/app/auth/model/data/login.dart';
 import 'package:ileiwe/app/auth/model/data/register.dart';
 import 'package:ileiwe/app/auth/model/data/user_info.dart';
 
@@ -13,7 +15,7 @@ class AuthRepository {
 
   registerKid(KidInfo kidInfo, String userId){}
 
-  login(){}
+  login(Login userData){}
 }
 
 
@@ -23,19 +25,48 @@ class FirebaseAuthRepository implements AuthRepository {
 
   final FirebaseAuthDataSource dataSource;
 
+  
+  
+
   @override
-  login() {
-    // TODO: implement login
-    throw UnimplementedError();
+  login(Login userData)async {
+    try {
+
+      final response = await dataSource.loginUser(userData);
+  
+      if(response.success){
+        final user = response.otherData['user'] as User;
+        final splitName = user.displayName != null ? user.displayName?.split(" ") : ["", ""];
+      
+        final userInfo = UserDetailInfo(isAuthenticated: true, 
+                      userId: user.uid, 
+                      firstName: splitName?[0] ?? "", 
+                      lastName: splitName?[1] ?? "", 
+                      phoneNumber: user.phoneNumber ?? "",
+                      isPhoneNumberVerified: user.phoneNumber != null  && user.phoneNumber!.isNotEmpty ? true : false,
+                      email: user.email ?? "", 
+                      isEmailVerified: user.emailVerified);
+
+
+        return ReturnedStatus(message: "success", success: true, otherData: {
+          'userInfo': userInfo});
+
+      }
+      return ReturnedStatus(message: response.message, success: false);
+       
+    } catch (e) {
+    
+      print(e);
+      return ReturnedStatus(message: "$e", success: false);
+    }
+    
   }
 
   @override
   register(Register register) async {
-    print("back to repository");
+    
     try {
       final response = await dataSource.registerUser(register);
-      print('token');
-      print(response.otherData['phoneNumberToken']);
 
       final user = response.otherData['user']as User;
 
@@ -44,11 +75,11 @@ class FirebaseAuthRepository implements AuthRepository {
 
       final userInfo = UserDetailInfo(isAuthenticated: true, 
                     userId: response.otherData['user']?.uid, 
-                    firstName: splitName?[0] ?? "", 
-                    lastName: splitName?[1] ?? "", 
+                    firstName: splitName?[0].trim() ?? "", 
+                    lastName: splitName?[1].trim() ?? "", 
                     phoneNumber: response.otherData['phoneNumber'],
                     isPhoneNumberVerified: false,
-                    email: response.otherData['user']?.uid, 
+                    email: response.otherData['user']?.email, 
                     isEmailVerified: false);
 
       return ReturnedStatus(message: "success", success: true, otherData: {
@@ -60,7 +91,6 @@ class FirebaseAuthRepository implements AuthRepository {
 
 
     } catch (e) {
-        print('error in repository');
         return ReturnedStatus(message: "Unknown Error", success: false);
     }
     
@@ -109,4 +139,66 @@ class FirebaseAuthRepository implements AuthRepository {
     
   }
 
+  updateInfo(Register registerInfo) async {
+    try {
+          
+          String currentDisplayName = dataSource.instance.currentUser?.displayName ?? "";
+          List<String> nameParts = currentDisplayName.split(' ');
+          String currentFirstName = nameParts.isNotEmpty ? nameParts[0] : "";
+          String currentLastName = nameParts.length > 1 ? nameParts[1] : "";
+
+          
+          String firstName = registerInfo.firstName.isEmpty ? currentFirstName : registerInfo.firstName.trim();
+          String lastName = registerInfo.lastName.isEmpty ? currentLastName : registerInfo.lastName.trim();
+
+          if (firstName.isNotEmpty || lastName.isNotEmpty) {
+              
+              String updatedName = "$firstName $lastName".trim();
+              await dataSource.instance.currentUser?.updateDisplayName(updatedName);
+              await dataSource.instance.currentUser?.reload();
+              final userInfo =updateUserState();
+              return ReturnedStatus(message: "Successfully changed your name", success: true, otherData: {'user':userInfo});
+          }
+
+          
+          if (registerInfo.password.isNotEmpty) {
+              var currentUser = dataSource.instance.currentUser;
+              if (currentUser?.uid != null) {
+                  await currentUser?.reload();
+                  return resendOTP(currentUser!.uid);
+              }
+          }
+
+          return ReturnedStatus(message: "No changes made", success: false);
+      } catch (e) {
+          return ReturnedStatus(message: "Unknown error: $e", success: false);
+      }
+
+  }
+
+  UserDetailInfo updateUserState() {
+
+      final user = dataSource.instance.currentUser;
+       final splitName = user?.displayName != null ? user?.displayName?.split(" ") : ["", ""];
+     
+      final userInfo = UserDetailInfo(isAuthenticated: true, 
+                    userId: user?.uid ?? "", 
+                    firstName: splitName?[0] ?? "", 
+                    lastName: splitName?[1] ?? "", 
+                    phoneNumber: user?.phoneNumber ?? "",
+                    isPhoneNumberVerified: user?.phoneNumber != null  && user!.phoneNumber!.isNotEmpty ? true : false,
+                    email: user?.email ?? "", 
+                    isEmailVerified: user?.emailVerified ?? false);
+      return userInfo;
+  }
+
+  logout() async {
+    try {
+      
+        await FirebaseAuth.instance.signOut();
+        return ReturnedStatus(message: "Successfully Logout", success: true);
+    } catch (e) {
+        return ReturnedStatus(message: "Successfully Logout", success: false);
+    }
+  }
 }

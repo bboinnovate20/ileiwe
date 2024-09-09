@@ -27,6 +27,7 @@ mixin _$KidInfo {
   String? get interestSubject => throw _privateConstructorUsedError;
   String? get challengingSubject => throw _privateConstructorUsedError;
   String? get benefit => throw _privateConstructorUsedError;
+  int get coinEarned => throw _privateConstructorUsedError;
 
   /// Serializes this KidInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +50,8 @@ abstract class $KidInfoCopyWith<$Res> {
       String? favoriteSubject,
       String? interestSubject,
       String? challengingSubject,
-      String? benefit});
+      String? benefit,
+      int coinEarned});
 }
 
 /// @nodoc
@@ -74,6 +76,7 @@ class _$KidInfoCopyWithImpl<$Res, $Val extends KidInfo>
     Object? interestSubject = freezed,
     Object? challengingSubject = freezed,
     Object? benefit = freezed,
+    Object? coinEarned = null,
   }) {
     return _then(_value.copyWith(
       userId: null == userId
@@ -104,6 +107,10 @@ class _$KidInfoCopyWithImpl<$Res, $Val extends KidInfo>
           ? _value.benefit
           : benefit // ignore: cast_nullable_to_non_nullable
               as String?,
+      coinEarned: null == coinEarned
+          ? _value.coinEarned
+          : coinEarned // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -122,7 +129,8 @@ abstract class _$$KidInfoImplCopyWith<$Res> implements $KidInfoCopyWith<$Res> {
       String? favoriteSubject,
       String? interestSubject,
       String? challengingSubject,
-      String? benefit});
+      String? benefit,
+      int coinEarned});
 }
 
 /// @nodoc
@@ -145,6 +153,7 @@ class __$$KidInfoImplCopyWithImpl<$Res>
     Object? interestSubject = freezed,
     Object? challengingSubject = freezed,
     Object? benefit = freezed,
+    Object? coinEarned = null,
   }) {
     return _then(_$KidInfoImpl(
       userId: null == userId
@@ -175,6 +184,10 @@ class __$$KidInfoImplCopyWithImpl<$Res>
           ? _value.benefit
           : benefit // ignore: cast_nullable_to_non_nullable
               as String?,
+      coinEarned: null == coinEarned
+          ? _value.coinEarned
+          : coinEarned // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -189,7 +202,8 @@ class _$KidInfoImpl with DiagnosticableTreeMixin implements _KidInfo {
       required this.favoriteSubject,
       required this.interestSubject,
       required this.challengingSubject,
-      required this.benefit});
+      required this.benefit,
+      required this.coinEarned});
 
   factory _$KidInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$KidInfoImplFromJson(json);
@@ -208,10 +222,12 @@ class _$KidInfoImpl with DiagnosticableTreeMixin implements _KidInfo {
   final String? challengingSubject;
   @override
   final String? benefit;
+  @override
+  final int coinEarned;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'KidInfo(userId: $userId, age: $age, hobby: $hobby, favoriteSubject: $favoriteSubject, interestSubject: $interestSubject, challengingSubject: $challengingSubject, benefit: $benefit)';
+    return 'KidInfo(userId: $userId, age: $age, hobby: $hobby, favoriteSubject: $favoriteSubject, interestSubject: $interestSubject, challengingSubject: $challengingSubject, benefit: $benefit, coinEarned: $coinEarned)';
   }
 
   @override
@@ -225,7 +241,8 @@ class _$KidInfoImpl with DiagnosticableTreeMixin implements _KidInfo {
       ..add(DiagnosticsProperty('favoriteSubject', favoriteSubject))
       ..add(DiagnosticsProperty('interestSubject', interestSubject))
       ..add(DiagnosticsProperty('challengingSubject', challengingSubject))
-      ..add(DiagnosticsProperty('benefit', benefit));
+      ..add(DiagnosticsProperty('benefit', benefit))
+      ..add(DiagnosticsProperty('coinEarned', coinEarned));
   }
 
   @override
@@ -242,13 +259,23 @@ class _$KidInfoImpl with DiagnosticableTreeMixin implements _KidInfo {
                 other.interestSubject == interestSubject) &&
             (identical(other.challengingSubject, challengingSubject) ||
                 other.challengingSubject == challengingSubject) &&
-            (identical(other.benefit, benefit) || other.benefit == benefit));
+            (identical(other.benefit, benefit) || other.benefit == benefit) &&
+            (identical(other.coinEarned, coinEarned) ||
+                other.coinEarned == coinEarned));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, age, hobby,
-      favoriteSubject, interestSubject, challengingSubject, benefit);
+  int get hashCode => Object.hash(
+      runtimeType,
+      userId,
+      age,
+      hobby,
+      favoriteSubject,
+      interestSubject,
+      challengingSubject,
+      benefit,
+      coinEarned);
 
   /// Create a copy of KidInfo
   /// with the given fields replaced by the non-null parameter values.
@@ -274,7 +301,8 @@ abstract class _KidInfo implements KidInfo {
       required final String? favoriteSubject,
       required final String? interestSubject,
       required final String? challengingSubject,
-      required final String? benefit}) = _$KidInfoImpl;
+      required final String? benefit,
+      required final int coinEarned}) = _$KidInfoImpl;
 
   factory _KidInfo.fromJson(Map<String, dynamic> json) = _$KidInfoImpl.fromJson;
 
@@ -292,6 +320,8 @@ abstract class _KidInfo implements KidInfo {
   String? get challengingSubject;
   @override
   String? get benefit;
+  @override
+  int get coinEarned;
 
   /// Create a copy of KidInfo
   /// with the given fields replaced by the non-null parameter values.

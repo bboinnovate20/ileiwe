@@ -1,59 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ileiwe/app/analytics/analytics_controller.dart';
 import 'package:ileiwe/app/analytics/views/widget/assessment_card.dart';
 import 'package:ileiwe/app/analytics/views/widget/performance_card.dart';
 import 'package:ileiwe/app/dashboard/view/dashboard_screen.dart';
 import 'package:ileiwe/app/dashboard/view/widgets/persistent_header.dart';
+import 'package:ileiwe/app/quizes/models/data/skills.dart';
+import 'package:ileiwe/app/quizes/providers/skills_provider.dart';
+import 'package:ileiwe/cores/common/assessment.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 import 'package:ileiwe/cores/common/widgets/top_nav.dart';
+import 'package:ileiwe/cores/utils/get_percentage.dart';
 
-class AnalyticsScreen extends StatelessWidget {
+class AnalyticsScreen extends ConsumerWidget {
    const AnalyticsScreen({super.key,});
 
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
-   final List<Map<String, dynamic>> assessments = [
-          {
-            'title': "Reading",
-            'imageName': "reading_little_boy",
-            'color': [const Color(0xFF95D1FC), const Color(0xFF3F44D8)],
-            'progress': 20,
-            
-          },
-          {
-            'title': "Writing",
-            'imageName': "girl_writing",
-            'color': [const Color(0xFFFD5A20), const Color(0xFFE2772F)],
-            'progress': 70,
-            'pColor': Colors.red
-          },
-          {
-            'title': "Literacy",
-            'imageName': "little_boy_reading_smile",
-            'color': [const Color(0xFFFDD667), const Color(0xFFD6B835)],
-            'progress': 50,
-            'pColor': const Color.fromARGB(255, 136, 123, 5)
-          }
+    final controller = AnalyticsController(controller: ref);
 
-    ];
-
+  //  controller.getSkillsAnalytics();
+    
 
     return  AppContainer(
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: CustomScrollView(
+          child:   controller.getAllSkills().when(data: (skill) {
+            final allSkill = skill['skill'] as List;
+            return CustomScrollView(
                   slivers: [
-                     SliverPersistentHeader(
-                      pinned: true,
-                      delegate: StickyHeaderDelegate(
-                        child: const TopNav(title: "Progress Report", canGoBack: false),
-                        maxHeight: 80, // Adjust this value based on your TopHeader height
-                        minHeight: 60,  // Minimum height when fully collapsed
-                      ),
-                    ),
-                    const SliverToBoxAdapter(child: PerformanceCard(performance: 50, imagePath: "assets/images/happy_boy.png")),
+                     
+                       SliverPersistentHeader(
+                          pinned: true,
+                          delegate: StickyHeaderDelegate(
+                            child: const TopNav(title: "Progress Report", canGoBack: false),
+                            maxHeight: 80, // Adjust this value based on your TopHeader height
+                            minHeight: 60,  // Minimum height when fully collapsed
+                          ),
+                        ),
+                    
+                        SliverToBoxAdapter(child: PerformanceCard(performance: (skill['overallPerformance'] ?? 0.0) * 100.0, imagePath: "assets/images/happy_boy.png")),
+
+                     
                     
                     SliverToBoxAdapter(
                       child: Container(
@@ -61,29 +51,31 @@ class AnalyticsScreen extends StatelessWidget {
                         height: 240,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: assessments.length,
+                            itemCount: allSkill.length,
                             itemBuilder: (context, index) {
-                              final assess = assessments[index];
+                              final assess = allSkill[index] as SkillsLearning;
+                              final nSkill = skill['analytics'] != null ? (skill['analytics']as List).where((sk) => sk['quizId'] == assess.id): null;
+                              print("nSkill");
+                              print(nSkill?.length);
                               return Padding(
                                 padding: const EdgeInsets.only(top: 40),
                                 child: AssessmentAnalyticsSectionCard(
-                                  title: assess['title'],
-                                  color: assess['pColor'],
-                                  progress: double.parse(assess['progress'].toString()),
-                                  imageName: assess['imageName'],
-                                  gradientColor: assess['color'],
-                                ),
-                        
-                                
+                                  title: assess.name,
+                                  color: assessments[index]['pColor'],
+                                  progress: nSkill == null || nSkill.isEmpty ? 0 : getPercentage(nSkill.first['currentChapter'] ?? 0, nSkill.first['totalQuiz'] ?? 100),
+                                  imageName: assessments[index]['imageName'],
+                                  gradientColor: assessments[index]['color'],
+                                ),        
                               );
                             },
-                          ),
+                          )  
                       ),
                     
                     )
                     
                     ]
-          ),
+          );
+          }, error: (_,n) => const Text("Loading"), loading: () => const Text("loading"))
         )));
   }
 }

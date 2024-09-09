@@ -1,52 +1,47 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
+import 'package:ileiwe/app/auth/view/kid_detail_screen.dart';
 import 'package:ileiwe/app/auth/view/widget/header_content_auth.dart';
 import 'package:ileiwe/app/dashboard/view/home_screen.dart';
 import 'package:ileiwe/app/dashboard/view/widgets/persistent_header.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
+import 'package:ileiwe/app/quizes/models/data/skills.dart';
+import 'package:ileiwe/app/quizes/providers/skills_provider.dart';
+import 'package:ileiwe/constant/routes.dart';
+import 'package:ileiwe/cores/common/assessment.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 
 
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
-    final List<Map<String, dynamic>> assessments = [
-          {
-            'title': "Reading",
-            'imageName': "reading_little_boy",
-            'color': [const Color(0xFF95D1FC), const Color(0xFF3F44D8)]
-          },
-          {
-            'title': "Writing",
-            'imageName': "girl_writing",
-            'color': [const Color(0xFFFD5A20), const Color(0xFFE2772F)]
-          },
-          {
-            'title': "Literacy",
-            'imageName': "little_boy_reading_smile",
-            'color': [const Color(0xFFFDD667), const Color(0xFFD6B835)]
-          }
-
-    ];
+   
 
     final List<Map<String, dynamic>> explore = [
           {
+            'id': "5oTOqxw7sPxlBwmFrg8n",
             'title': "E-book Library",
             'imageName': "book",
-            
+            'action': () => context.push(RoutesName.eLibrary)
           },
           {
+            "id": "CWvEczgUa4CLvkjkOipx",
             'title': "Skit Library",
             'imageName': "mask",
+            'action': () => context.push(RoutesName.skitLibrary)
             
           },
           {
+            "id": "BrTsCPjOp312bQNxHpu0",
             'title': "Stories Library",
             'imageName': "note_flower",
             
@@ -59,15 +54,19 @@ class DashboardScreen extends StatelessWidget {
 
     ];
 
+     final allSkills = ref.watch(skillsLearningProvider);
+
     return AppContainer(
-            
+           
+
             child: SafeArea(
               child: CustomScrollView(
                 slivers: [
                    SliverPersistentHeader(
                     pinned: true,
                     delegate: StickyHeaderDelegate(
-                      child: const TopHeader(),
+                      child: TopHeader(name: ref.watch(userStateNotifierProvider).firstName, 
+                                coinEarned: ref.watch(userStateNotifierProvider).kidInfo?.coinEarned ?? 0 ,),
                       maxHeight: 60, // Adjust this value based on your TopHeader height
                       minHeight: 60,  // Minimum height when fully collapsed
                     ),
@@ -80,23 +79,33 @@ class DashboardScreen extends StatelessWidget {
                         
                         SizedBox(
                           height: 220, 
-                child: ListView.builder(
+                child: allSkills.when(data: (skill) {
+                  return ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: assessments.length,
+                  itemCount: (skill['skill'] as List).length,
                   itemBuilder: (context, index) {
-                    final assess = assessments[index];
+                    final allSkills = skill['skill'];
+
+                    final assess = allSkills[index] as SkillsLearning;
                     return Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: AssessmentSectionCard(
-                        title: assess['title'],
-                        imageName: assess['imageName'],
-                        gradientColor: assess['color'],
+                        title: assess.name,
+                        imageName: assessments[index]['imageName'],
+                        gradientColor: assessments[index]['color'],
+                        action: () => context.push(RoutesName.quizInstruction, extra: assess),
                       ),
 
                       
                     );
                   },
-                ),
+                );
+                }, error: (err, _) {
+                  print(err);
+                  print(_);
+                  return SizedBox(height: 20, width: 20, child: Text("$err"),);
+                }, 
+                      loading: () => const SizedBox(height: 20, width: 20,))
               ),
                 const SizedBox(height: 25),
                 ExploreFeatures(assessments: explore),
@@ -292,18 +301,21 @@ class ExploreLibraryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 15),
-      child:  Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical:10, horizontal: 10),
-            margin: const EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10)
-            ),
-            child: Image.asset("assets/images/${assess['imageName']}.png", height: 80,),),
-           Text(assess['title'], style: const TextStyle(fontWeight: FontWeight.bold),)
-        ],
+      child:  GestureDetector(
+        onTap: assess['action'],
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(vertical:10, horizontal: 10),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: Image.asset("assets/images/${assess['imageName']}.png", height: 80,),),
+             Text(assess['title'], style: const TextStyle(fontWeight: FontWeight.bold),)
+          ],
+        ),
       ),
     );
   }
@@ -314,50 +326,55 @@ class AssessmentSectionCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.imageName,
-    required this.gradientColor
+    required this.gradientColor,
+    required this.action
   });
 
   final String title;
   final String imageName;
   final List<Color> gradientColor;
+  final void Function() action;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 15.0),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-
-          Container(
-            height: 180,
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-            decoration:  BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              gradient:   LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: gradientColor)
+      child: GestureDetector(
+        onTap: () => action(),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+        
+            Container(
+              height: 180,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+              decoration:  BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                gradient:   LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColor)
+              ),
+              child:  Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                    Text(title, textAlign: TextAlign.center, 
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18, color: Colors.white)),
+                    
+                    Container(padding: const EdgeInsets.all(0.5), color: Colors.white, width: 120, margin: const EdgeInsets.symmetric(vertical: 8),),
+                    
+                    const Text("Start Practicing", style: TextStyle(color: Colors.white),)
+                ],
+              ),
             ),
-            child:  Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                  Text(title, textAlign: TextAlign.center, 
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18, color: Colors.white)),
-                  
-                  Container(padding: const EdgeInsets.all(0.5), color: Colors.white, width: 120, margin: const EdgeInsets.symmetric(vertical: 8),),
-                  
-                  const Text("Start Practicing", style: TextStyle(color: Colors.white),)
-              ],
-            ),
-          ),
-
-          Positioned(
-            top: -40,
-            right: 0,
-            left: 0,
-            child: Image.asset("assets/images/$imageName.png", height: 140).animate().scale(duration: 300.ms))
-        ],
+        
+            Positioned(
+              top: -40,
+              right: 0,
+              left: 0,
+              child: Image.asset("assets/images/$imageName.png", height: 140).animate().scale(duration: 300.ms))
+          ],
+        ),
       ),
     );
   }
@@ -414,7 +431,12 @@ class MainCardDashboard extends StatelessWidget {
 class TopHeader extends StatelessWidget {
   const TopHeader({
     super.key,
+    required this.name,
+    required this.coinEarned
   });
+
+  final String name;
+  final int coinEarned;
 
   @override
   Widget build(BuildContext context) {
@@ -429,7 +451,7 @@ class TopHeader extends StatelessWidget {
             children: [
               Text("Hello,", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize:20)),
               
-              Text("Ile Iwe,", style: Theme.of(context).textTheme.titleLarge),
+              Text("$name,", style: Theme.of(context).textTheme.titleLarge),
             ],
           ),
           Row(
@@ -446,7 +468,7 @@ class TopHeader extends StatelessWidget {
                   children: [
                     Image.asset("assets/images/coin_reward.png", height: 25,),
                     const SizedBox(width: 5,),
-                    const Text("350", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+                    Text("$coinEarned", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
                   ],
                 ),
               ),
@@ -459,17 +481,20 @@ class TopHeader extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(13)
                 ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    SvgPicture.asset("assets/icons/email.svg", height: 15,),
-                    Positioned(
-                      right: -2,
-                      top: -3,
-                      child: Container(decoration:  BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(30)), 
-                                padding: const EdgeInsets.all(5),),
-                    )
-                  ],
+                child:  GestureDetector(
+                  onTap: () => context.push(RoutesName.notification),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      SvgPicture.asset("assets/icons/email.svg", height: 15,),
+                      Positioned(
+                        right: -2,
+                        top: -3,
+                        child: Container(decoration:  BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(30)), 
+                                  padding: const EdgeInsets.all(5),),
+                      )
+                    ],
+                  ),
                 ),
               ),
              Container(

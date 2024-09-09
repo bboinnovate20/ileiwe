@@ -18,6 +18,7 @@ class ButtonOne extends StatelessWidget {
     this.paddingGeo,
     this.height,
     this.radius,
+    this.isDisabled = false
   });
 
 
@@ -34,18 +35,19 @@ class ButtonOne extends StatelessWidget {
   final double? height;
   final EdgeInsetsGeometry? paddingGeo;
   final BorderRadius? radius;
+  final bool isDisabled;
   
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: loading ? () => {} : action,
+      onTap: loading || isDisabled ? () => {} : action,
       child: Container(
         width: width,
         height: height,
       
         padding: paddingGeo ?? (extend == null ? padding ?? const EdgeInsets.symmetric(vertical:15) : const EdgeInsets.symmetric(vertical: 15, horizontal: 90) ),
         decoration: BoxDecoration(
-          color: bgColor ?? Theme.of(context).colorScheme.primary,
+          color: isDisabled ? Colors.grey : bgColor ?? Theme.of(context).colorScheme.primary,
           border: border ?? Border.all(width: 1, color: Colors.white),
           borderRadius: radius ?? BorderRadius.circular(50)
         ),

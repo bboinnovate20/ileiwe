@@ -57,7 +57,8 @@ class _KidDetailScreenState extends ConsumerState<KidDetailScreen> {
           'favoriteSubject': favouriteSubjectController.value.text,
           'interestSubject': interestSubjectController.value.text,
           'challengingSubject': challengingSubjectController.value.text,
-          'benefit': userBenefitController.value.text
+          'benefit': userBenefitController.value.text,
+          'coinEarned': 10
       };
 
       final result = await authController.registerKid(data);
@@ -89,14 +90,13 @@ class _KidDetailScreenState extends ConsumerState<KidDetailScreen> {
   @override
   Widget build(BuildContext context) {
 
-
-    return  ContainerCustom(
-      
+    return  ContainerCustom(      
+      canGoBack: false,
       child: CustomScrollView(
-
+        
         slivers: [
           SliverList.list(children: [
-            const SizedBox(height: 50,)  ,
+            const SizedBox(height: 45,)  , 
             const HeaderContentAuth(
               right: -60,
               top: -10,
@@ -107,7 +107,7 @@ class _KidDetailScreenState extends ConsumerState<KidDetailScreen> {
             Form(
             key: formKey,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               margin: const EdgeInsets.only(bottom: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -180,7 +180,7 @@ class _KidDetailScreenState extends ConsumerState<KidDetailScreen> {
                 ButtonOne(label: "Start Learning", extend: true, action: () => submit(), 
                 loading: loading,
                 border: Border.all(width: 0), bgColor: const Color.fromARGB(255, 255, 6, 255),),
-                const SizedBox(height: 200,)
+                
               
                 
                 ],

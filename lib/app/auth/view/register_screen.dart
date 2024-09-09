@@ -57,7 +57,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
           Future.delayed(const Duration(seconds: 1), () {
             if (context.mounted) {
-              context.push("${RoutesName.verifyAccount}/${result.otherData['phoneNumberToken']}");
+              context.push(RoutesName.kidDetails);
+              // context.push("${RoutesName.verifyAccount}/${result.otherData['phoneNumberToken']}");
             }
           });
           setState(() {loading = false;});
@@ -70,6 +71,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     }
 
+
     @override
     void initState() {
       super.initState();
@@ -80,13 +82,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     Widget build(BuildContext context) {
       
     return  ContainerCustom(
-             appBar:Container(    
-              decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(12)),
-              padding: const EdgeInsets.all(5),
-              margin: const EdgeInsets.only(top: 10, left: 20),
-              child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),
             
             child:  CustomScrollView(
+              
                     slivers: [
                       SliverList.list(children: [
                         const HeaderContentAuth(
@@ -120,6 +118,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     controller: lastNameController),
                   InputFieldAuth(
                     fillColor: Colors.white30,
+                    keyboardType: TextInputType.emailAddress,
                     textColor: Colors.white,
                     label: "Enter Email", 
                     validator: (value) => isValidEmail(value!), 
@@ -128,6 +127,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   InputFieldAuth(
                     fillColor: Colors.white30,
                     textColor: Colors.white,
+                    keyboardType: TextInputType.phone,
                     label: "Enter Phone Number", 
                     validator: (value) => isValidPhoneNumber(value!), 
                     controller: phoneNumberController),

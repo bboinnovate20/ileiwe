@@ -18,6 +18,7 @@ class OnboardingScreenTwo extends StatelessWidget {
     
     
     ContainerCustom(
+      canGoBack: false,
                 bottomSheet: OnboardingButtonInfo(
                 title: 'Empowering Young minds to enjoy learning',
                 subTitle: 'Empower Young Minds \n Through Playful Learning',

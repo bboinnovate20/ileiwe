@@ -15,6 +15,7 @@ _$KidInfoImpl _$$KidInfoImplFromJson(Map<String, dynamic> json) =>
       interestSubject: json['interestSubject'] as String?,
       challengingSubject: json['challengingSubject'] as String?,
       benefit: json['benefit'] as String?,
+      coinEarned: (json['coinEarned'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$KidInfoImplToJson(_$KidInfoImpl instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$$KidInfoImplToJson(_$KidInfoImpl instance) =>
       'interestSubject': instance.interestSubject,
       'challengingSubject': instance.challengingSubject,
       'benefit': instance.benefit,
+      'coinEarned': instance.coinEarned,
     };

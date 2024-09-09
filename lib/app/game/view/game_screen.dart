@@ -185,7 +185,7 @@ class ContinueReadingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 20, left: 20, bottom: 100),
+      margin: const EdgeInsets.only(bottom: 0),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white60,

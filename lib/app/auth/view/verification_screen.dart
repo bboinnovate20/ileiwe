@@ -91,7 +91,7 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
     
 
     return  ContainerCustom(
-
+      isNotScrollable:true,
        appBar:Container(
           
           decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(12)),
@@ -114,20 +114,21 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
           ],
                ),
        ),
-      child: Container(
-        // margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top) ,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const HeaderContentAuth(
-              right: 10,
-              imageName: 'lock',
-              mainHeader: "Verify Account", content: "Enter the code\nthat has been\nsent"),
-            const SizedBox(height: 20),
-            const SizedBox(height: 20),
-            Container(
-              margin: const EdgeInsets.only(top: 40),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const HeaderContentAuth(
+            right: 10,
+            imageName: 'lock',
+            mainHeader: "Verify Account", content: "Enter the code\nthat has been\nsent"),
+          const SizedBox(height: 20),
+          const SizedBox(height: 20),
+          Container(
+            height: 500,
+            margin: const EdgeInsets.only(top: 40),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SizedBox(
+              height: 100,
               child: Form(
                 key: formKey,
                 child: Column(
@@ -142,15 +143,15 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                         TextSpan(text: ref.read(userStateNotifierProvider).phoneNumber, style: const TextStyle(fontWeight: FontWeight.bold)),
                         const TextSpan(text: "\nEnter the code to verify your account" )
                     ])),
-        
-        
+                  
+                  
               InputFieldAuth(
                 fillColor: Colors.white30,
                 textColor: Colors.white,
                 label: "Enter the code", 
                 validator: (value) => isValidName(value!, field: "Invalid Token"), 
                 controller: tokenController).padding(top: 40, bottom: 10),
-        
+                  
                 GestureDetector(
                   onTap: () => resendOTP(),
                   child: RichText(
@@ -167,9 +168,10 @@ class _VerificationScreenState extends ConsumerState<VerificationScreen> {
                 ],)
                 
               ,),
-            )
-          ],
-        ),
+            ),
+          )
+        
+        ],
       ),
 
       

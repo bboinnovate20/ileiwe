@@ -21,10 +21,11 @@ class SplashScreenController {
     final User? userFDetail = ref.read(firebaseAuthRepositoryProvider).initiateCurrentUser();
 
     if(userFDetail != null) {
-        final splitName = userFDetail.displayName != null ? userFDetail.displayName?.split(" ") : ["", ""];
-
+        final  firstSplitName = userFDetail.displayName != null ? userFDetail.displayName?.toString().split(" ") : ["No name", "No name"];
+        final splitName = firstSplitName!.length == 1 ? [firstSplitName[0], ""] : firstSplitName.length == 2 ? firstSplitName : [" ", " "];
+        
         final userInfo = UserDetailInfo(isAuthenticated: true, 
-        userId: userFDetail.uid, firstName: splitName![0], 
+        userId: userFDetail.uid, firstName: splitName[0], 
         lastName: splitName[1], 
         email: userFDetail.email?? "", 
         phoneNumber: userFDetail.phoneNumber ?? "", 
@@ -34,6 +35,7 @@ class SplashScreenController {
         final isKidExist = await ref.read(firebaseAuthRepositoryProvider).getKid(userInfo.userId);
 
         if(isKidExist.success) {
+          print(isKidExist.otherData);
           final kidInfo = KidInfo.fromJson(isKidExist.otherData['data']);
           userInfo.kidInfo = kidInfo;
         }
@@ -46,6 +48,7 @@ class SplashScreenController {
         if(!context.mounted) return;
         if(isKidExist.success) {context.replace(RoutesName.homeDashboard);}
         else {context.replace(RoutesName.kidDetails);}
+        // else {context.replace(RoutesName.login);}
          
         
     }else {

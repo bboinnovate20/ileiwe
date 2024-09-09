@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
+import 'package:ileiwe/app/auth/view/kid_detail_screen.dart';
+import 'package:ileiwe/app/profile/profile_controller.dart';
+import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(userStateNotifierProvider);
+    final controller = ProfileController(ref: ref, context: context);
+    
     return  AppContainer(
       canGoBack: false,
       title: "Profile",  
@@ -15,9 +24,9 @@ class ProfileScreen extends StatelessWidget {
               padding:  const EdgeInsets.symmetric(horizontal: 20), 
               sliver: SliverList.list(
                 children:  [
-                  topDetailHeader(context),
+                  topDetailHeader(context, userId.firstName, userId.lastName, userId.email),
                   const SizedBox(height: 20,),
-                  const ProfileInformation()
+                   ProfileInformation(profileController: controller)
                   
                 ],
               ),
@@ -25,7 +34,7 @@ class ProfileScreen extends StatelessWidget {
     ],);
   }
 
-  Container topDetailHeader(BuildContext context) => Container(
+  Container topDetailHeader(BuildContext context, firstName, lastName, String email) => Container(
       child:  Column(
         children: [
           SizedBox(
@@ -40,8 +49,8 @@ class ProfileScreen extends StatelessWidget {
               ],
             )),
             const SizedBox(height: 10,),
-             Text("Ibrahim Ibrahim", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 18)),
-            const Text("ibrahim@gmail.com", style: TextStyle(fontSize: 12),),
+             Text("$firstName $lastName", style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 18)),
+             Text(email, style: const TextStyle(fontSize: 12),),
         ],
       ),
   );
@@ -50,7 +59,11 @@ class ProfileScreen extends StatelessWidget {
 class ProfileInformation extends StatelessWidget {
   const ProfileInformation({
     super.key,
+    required this.profileController,
   });
+
+  final ProfileController profileController;
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +79,14 @@ class ProfileInformation extends StatelessWidget {
         children: [
           detailSection(context: context, title: "Edit Profile", 
           imageName: "profile_icon.svg",
-            subTitle: "Manage Personal Information", action: () => {} ),
+            subTitle: "Manage Personal Information", action: () => context.push(RoutesName.editProfile)),
             
           detailSection(context: context, title: "My Subscription", 
           imageName: "subscription.svg",
-            subTitle: "Notification about games", action: () => {} ),
+            subTitle: "Notification about games", action: () => context.push(RoutesName.subscriptionPricing, extra: true) ),
           detailSection(context: context, title: "Messages", 
           imageName: "messages.svg",
-            subTitle: "View messages", action: () => {} ),
+            subTitle: "View messages", action: () => context.push(RoutesName.messages, extra: true) ),
           detailSection(context: context, title: "Privacy Settings", 
           imageName: "privacy.svg",
             subTitle: "App terms and conditions", action: () => {} ),
@@ -85,7 +98,7 @@ class ProfileInformation extends StatelessWidget {
             subTitle: "Support centre", action: () => {} ),
           detailSection(context: context, title: "Logout", 
           imageName: "logout.svg",
-            subTitle: "Account info and logout", action: () => {} ),
+            subTitle: "Account info and logout", action: () => profileController.logout() ),
         ],
       )
     );

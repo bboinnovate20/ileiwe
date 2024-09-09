@@ -7,48 +7,47 @@ class ContainerCustom extends StatelessWidget {
     required this.child,
     this.bottomSheet,
     this.appBar,
+    this.isNotScrollable = false,
+    this.canGoBack =true
   });
 
   final Widget child;
   final Widget? bottomSheet;
   final Widget? appBar;
+  final bool isNotScrollable;
+  final bool canGoBack;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+    
       extendBody: true,
-      extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: appBar != null ? SafeArea(
-        child: Container(
-          margin: EdgeInsets.only(top: MediaQuery.paddingOf(context).top * 2.2, left: 20),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: GestureDetector(onTap: () => context.pop(), child: appBar)),
-        ),
-      ) : null,
+      extendBodyBehindAppBar: true,
+      appBar: canGoBack ? AppBar(
+        leading: Align(
+          alignment: Alignment.topLeft,
+          child: GestureDetector(onTap: () => context.pop(), child: Container(    
+            decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(12)),
+            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.only(top: 10, left: 20),
+            child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),)) ,
+      ): null,
       
       // appBar: appBar,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      // backgroundColor: Theme.of(context).colorScheme.surface,
       bottomSheet: bottomSheet,
-      body: Stack(
-        children: [
-          
-          Align(
-            alignment: Alignment.center,
-            child: ClipPath(child: Image.asset("assets/images/bg_path_2.png",  
-                height: MediaQuery.of(context).size.height, fit: BoxFit.contain,)),
-          ),
-
-              SafeArea(child: Padding(
-            padding: appBar!= null ? EdgeInsets.only(top: MediaQuery.paddingOf(context).top +15) : const EdgeInsets.all(0),
-            child: child,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/bg_auth.png"),
+            fit: BoxFit.cover,
           )),
-  
-          
-          
-      
-        ],
-      ),
+        child:  isNotScrollable ?   SingleChildScrollView(
+               child: SafeArea(child: child)
+             ): SafeArea(child: Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: child)),
+      )
     );
   }
 }

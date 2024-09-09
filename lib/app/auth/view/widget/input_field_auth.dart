@@ -11,12 +11,17 @@ class InputFieldAuth extends StatelessWidget {
     this.isSecured = false,
     this.hintText = '',
     this.keyboardType = TextInputType.text,
-    required this.controller,
+    this.controller,
     this.fillColor,
     this.textColor,
     this.borderColor,
     this.otherSuffix,
     this.labelText = "",
+    this.labelTextStyle,
+    this.labelStyle,
+    this.onChange,
+    this.initialValue,
+    this.textStyle
   });
 
   final double bottomMargin;
@@ -25,12 +30,17 @@ class InputFieldAuth extends StatelessWidget {
   final bool isSecured;
   final String hintText;
   final TextInputType keyboardType;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Color? fillColor;
   final Color? textColor;
   final Color? borderColor;
   final Widget? otherSuffix;
   final String labelText;
+  final TextStyle? labelTextStyle;
+  final TextStyle? labelStyle;
+  final void Function(String)? onChange;
+  final String? initialValue;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +52,8 @@ class InputFieldAuth extends StatelessWidget {
       StatefulBuilder(
         builder: (context, setState) {
           return TextFormField(
-            
-            
+            initialValue: initialValue,
+            onChanged: onChange,
             controller: controller,
             obscureText: isHidden,
             style: const TextStyle(color: Colors.white),
@@ -58,7 +68,7 @@ class InputFieldAuth extends StatelessWidget {
 
               hintText: hintText,
               
-              label: Text(label, style: TextStyle(color: textColor ?? Colors.white, fontWeight: FontWeight.w400),),
+              label: Text(label, style: labelStyle ?? TextStyle(color: textColor ?? Colors.white, fontWeight: FontWeight.w400),),
               filled: true,
               focusColor: Colors.white,
               floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, 
@@ -110,21 +120,99 @@ class InputFieldAuth extends StatelessWidget {
         
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          labelText.isNotEmpty ? Text(labelText, style: const TextStyle(color: Colors.white, fontSize: 18),).padding(bottom: 8, top:20) : 
+          labelText.isNotEmpty ? Text(labelText, style: labelTextStyle ?? const TextStyle(color: Colors.white, fontSize: 18),).padding(bottom: 8, top:20) : 
                 const SizedBox(),
           TextFormField(
+            onChanged: onChange,
+            initialValue: initialValue,
             controller: controller,
             validator: validator,
-            style: const TextStyle(color: Colors.white),
+            style: textStyle ?? const TextStyle(color: Colors.white),
             cursorColor: Colors.white,
             
+            
             decoration:  InputDecoration(
+              
+                focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor ?? Colors.red), 
+              borderRadius: BorderRadius.circular(20)),
+              suffixIcon: otherSuffix,
+              
+              errorStyle:  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+
+                errorBorder:OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red), 
+              borderRadius: BorderRadius.circular(20)) ,
+            
+              contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
+                borderRadius: BorderRadius.circular(20)),
+              labelStyle:  labelStyle ?? const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+              hintText: hintText,
+              label: Text(label),
+              filled: true,
+              
+              floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+              border: const OutlineInputBorder(
+          
+                borderSide: BorderSide(color: Colors.red, width: 40)),
+             focusedBorder: OutlineInputBorder(  
+                  borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
+                borderRadius: BorderRadius.circular(20)),
+              fillColor: fillColor ?? Colors.white,
+              
+            ),
+            
+          ),
+        ],
+      ) ,
+    );
+  }
+}
+
+
+class InputFieldCustom extends InputFieldAuth {
+  const InputFieldCustom({
+    super.key,
+    required super.label,
+    required super.validator,
+    super.controller,
+    super.isSecured,
+    super.hintText,
+    super.keyboardType,
+    super.fillColor,
+    super.textColor,
+    super.borderColor,
+    super.otherSuffix,
+    super.labelText,
+    this.expands = false,
+    required this.onChange
+  }) ;
+
+  final bool expands;
+  @override
+  final Function(String) onChange;
+
+  @override
+  Widget build(BuildContext context){
+    return TextField(
+      
+      controller: null,
+     keyboardType: TextInputType.multiline,
+      maxLines: null,
+        expands: expands,
+      onChanged: onChange,
+      textAlignVertical: TextAlignVertical.top,
+      decoration: InputDecoration(
+        // constraints: const BoxConstraints(minHeight: 200,),
+        
                 focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: borderColor ?? Colors.red), 
               borderRadius: BorderRadius.circular(20)),
               
               errorStyle:  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-
+    
                 errorBorder:OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.red), 
               borderRadius: BorderRadius.circular(20)) ,
@@ -148,11 +236,47 @@ class InputFieldAuth extends StatelessWidget {
               fillColor: fillColor ?? Colors.white,
               
             ),
-            
-          ),
-        ],
-      ) ,
+    
     );
+    
+    // TextFormField(
+    //       controller: controller,
+    //       validator: validator,
+    //       style: const TextStyle(color: Colors.white),
+    //       cursorColor: Colors.white,
+          
+    //       decoration:  InputDecoration(
+    //           focusedErrorBorder: OutlineInputBorder(
+    //           borderSide: BorderSide(color: borderColor ?? Colors.red), 
+    //         borderRadius: BorderRadius.circular(20)),
+            
+    //         errorStyle:  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    
+    //           errorBorder:OutlineInputBorder(
+    //           borderSide: const BorderSide(color: Colors.red), 
+    //         borderRadius: BorderRadius.circular(20)) ,
+          
+    //         contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+    //         enabledBorder: OutlineInputBorder(
+    //             borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
+    //           borderRadius: BorderRadius.circular(20)),
+    //         labelStyle:  const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+    //         hintText: hintText,
+    //         label: Text(label),
+    //         filled: true,
+            
+    //         floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+    //         border: const OutlineInputBorder(
+        
+    //           borderSide: BorderSide(color: Colors.red, width: 40)),
+    //        focusedBorder: OutlineInputBorder(  
+    //             borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
+    //           borderRadius: BorderRadius.circular(20)),
+    //         fillColor: fillColor ?? Colors.white,
+            
+    //       ),
+          
+    //     );
   }
-}
 
+}

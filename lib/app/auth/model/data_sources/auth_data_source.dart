@@ -59,46 +59,74 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
 
             
             final response = await addUserToDB(userPersonAccountDetail, credential.user?.uid);
-            
-      
 
             if(response.success) {
+              // await addUserToDB(userPersonAccountDetail, instance.currentUser?.uid);
+              // final phoneNumberVerificationId = await verifyPhoneNumber(userPersonAccountDetail.phoneNumber);
               
-              final phoneNumberVerificationId = await verifyPhoneNumber(userPersonAccountDetail.phoneNumber);
-              
-              print("verified sent");
+              // print("verified sent");
 
-              print(phoneNumberVerificationId.message);
+              // print(phoneNumberVerificationId.message);
 
-              return ReturnedStatus(message: "Successfully registerd", success: true, otherData: {
+              return ReturnedStatus(message: "Successfully registered", success: true, otherData: {
                 'user': instance.currentUser,
                 'phoneNumber': userPersonAccountDetail.phoneNumber,
-                'phoneNumberToken': phoneNumberVerificationId.otherData['phoneNumberToken']
+                // 'phoneNumberToken': phoneNumberVerificationId.otherData['phoneNumberToken']
               });
               
             }
 
         } on FirebaseAuthException catch (e) {
+          
           if (e.code == 'weak-password') {
             return  ReturnedStatus(
             message: 'Password is weak', success: false);
           } else if (e.code == 'email-already-in-use') {
             return  ReturnedStatus(message: 'The account already exists for that email.', success: false);
           }
+          return  ReturnedStatus(message: e.message ?? "", success: false);
         } catch (e) {
-            print("unknown error $e");
-            return  ReturnedStatus(message: 'Unknown error', success: false);
+            return  ReturnedStatus(message: "Error $e", success: false);
         }
-        print("unknown error no message");
       return  ReturnedStatus(message: 'Unknown error', success: false);
     
   }
 
 
-  @override
-  loginUser(Login loginDetails) {
 
+ @override
+  Future<ReturnedStatus> loginUser(Login userPersonAccountDetail) async {
+      try {
+            print("credential");
+            final UserCredential credential = await instance.signInWithEmailAndPassword(
+                email: userPersonAccountDetail.email,
+                password: userPersonAccountDetail.password,
+            );
+            print("$credential credential");
+            print("$credential credential");
+             return ReturnedStatus(message: "Successfully registerd", success: true, otherData: {
+                'user': credential.user,
+              });
+
+  
+        } on FirebaseAuthException catch (e) {
+          
+          if (e.code == 'weak-password') {
+            return  ReturnedStatus(
+            message: 'Password is weak', success: false);
+          } else if (e.code == 'email-already-in-use') {
+            return  ReturnedStatus(message: 'The account already exists for that email.', success: false);
+          }
+          return  ReturnedStatus(message: e.message ?? "", success: false);
+        } catch (e) {
+            return  ReturnedStatus(message: "Error $e", success: false);
+        }
+    
   }
+
+
+
+
   
   @override
   uploadImages(File path, String imagePurpose) async {
@@ -112,7 +140,7 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: code);
 
       // Sign the user in (or link) with the credential
-      await instance.signInWithCredential(credential);
+      await instance.currentUser?.updatePhoneNumber(credential);
 
       return ReturnedStatus(message: "successful", success: true);
       
@@ -161,8 +189,8 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
                 await instance.verifyPhoneNumber(
                       phoneNumber: phoneNumber,
                       verificationCompleted: (PhoneAuthCredential credentialAuth) async {
-                        print("completed");
-                        completer.complete(ReturnedStatus(message: "completed", success: true));
+                        // print("completed");
+                        // completer.complete(ReturnedStatus(message: "completed", success: true));
                       },
                       verificationFailed: (FirebaseAuthException e) {
                         completer.complete(ReturnedStatus(message: "failed to send code", success: false));

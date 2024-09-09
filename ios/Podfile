@@ -12,7 +12,7 @@ project 'Runner', {
 
 pod 'FirebaseFirestore', 
     :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git',
-    :tag => '10.25.0'
+    :tag => '10.18.0'
 
 def flutter_root
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)

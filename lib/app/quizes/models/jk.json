@@ -1,0 +1,115 @@
+{
+    "questions": {
+      "1": {
+        "id": 1,
+        "text": "What is the opposite of 'hot'?",
+        "option": [
+          {"id": 1, "text": "Cold"},
+          {"id": 2, "text": "Warm"},
+          {"id": 3, "text": "Hot"},
+          {"id": 4, "text": "Cool"}
+        ],
+        "correctAnswer": 1
+      },
+      "2": {
+        "id": 2,
+        "text": "Which of these is a vowel?",
+        "option": [
+          {"id": 1, "text": "B"},
+          {"id": 2, "text": "E"},
+          {"id": 3, "text": "G"},
+          {"id": 4, "text": "M"}
+        ],
+        "correctAnswer": 2
+      },
+      "3": {
+        "id": 3,
+        "text": "What is the plural of 'cat'?",
+        "option": [
+          {"id": 1, "text": "Cats"},
+          {"id": 2, "text": "Cat's"},
+          {"id": 3, "text": "Cates"},
+          {"id": 4, "text": "Cat"}
+        ],
+        "correctAnswer": 1
+      },
+      "4": {
+        "id": 4,
+        "text": "Which word is a noun?",
+        "option": [
+          {"id": 1, "text": "Run"},
+          {"id": 2, "text": "Happy"},
+          {"id": 3, "text": "Dog"},
+          {"id": 4, "text": "Quickly"}
+        ],
+        "correctAnswer": 3
+      },
+      "5": {
+        "id": 5,
+        "text": "What is the correct past tense of 'go'?",
+        "option": [
+          {"id": 1, "text": "Go"},
+          {"id": 2, "text": "Goes"},
+          {"id": 3, "text": "Went"},
+          {"id": 4, "text": "Gone"}
+        ],
+        "correctAnswer": 3
+      },
+      "6": {
+        "id": 6,
+        "text": "Which word is an adjective?",
+        "option": [
+          {"id": 1, "text": "Run"},
+          {"id": 2, "text": "Bright"},
+          {"id": 3, "text": "Teacher"},
+          {"id": 4, "text": "House"}
+        ],
+        "correctAnswer": 2
+      },
+      "7": {
+        "id": 7,
+        "text": "What is the correct spelling?",
+        "option": [
+          {"id": 1, "text": "Receve"},
+          {"id": 2, "text": "Receive"},
+          {"id": 3, "text": "Recieve"},
+          {"id": 4, "text": "Recive"}
+        ],
+        "correctAnswer": 2
+      },
+      "8": {
+        "id": 8,
+        "text": "Which word is a verb?",
+        "option": [
+          {"id": 1, "text": "Apple"},
+          {"id": 2, "text": "Run"},
+          {"id": 3, "text": "Big"},
+          {"id": 4, "text": "Blue"}
+        ],
+        "correctAnswer": 2
+      },
+      "9": {
+        "id": 9,
+        "text": "What is the correct contraction of 'they are'?",
+        "option": [
+          {"id": 1, "text": "Theyre"},
+          {"id": 2, "text": "There"},
+          {"id": 3, "text": "They're"},
+          {"id": 4, "text": "Their"}
+        ],
+        "correctAnswer": 3
+      },
+      "10": {
+        "id": 10,
+        "text": "Which of these is a question word?",
+        "option": [
+          {"id": 1, "text": "What"},
+          {"id": 2, "text": "Jump"},
+          {"id": 3, "text": "Red"},
+          {"id": 4, "text": "House"}
+        ],
+        "correctAnswer": 1
+      }
+    }
+  }
+  

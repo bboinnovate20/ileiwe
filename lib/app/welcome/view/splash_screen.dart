@@ -37,6 +37,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return  ContainerCustom(
+      canGoBack: false,
       child: Center(
             child: Transform.translate(
               offset: const Offset(0, -40),

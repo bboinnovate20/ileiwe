@@ -5,8 +5,9 @@ import 'package:ileiwe/app/subscription/view/widgets/premium_card.dart';
 import 'package:ileiwe/cores/common/widgets/customer_container.dart';
 
 class SubscriptionPricingScreen extends StatelessWidget {
-  const SubscriptionPricingScreen({super.key});
+  const SubscriptionPricingScreen({super.key, this.canGoBack = false});
 
+  final bool canGoBack;
   @override
   Widget build(BuildContext context) {
 
@@ -41,9 +42,9 @@ class SubscriptionPricingScreen extends StatelessWidget {
       "30 days book rentals",  
       "Access to Exclusive Content days book rentals",  
     ];
-
+    print(canGoBack);
     return  ContainerCustom(
-      
+      canGoBack: true,
       child:       CustomScrollView(
         slivers: [
           SliverList.list(children: [

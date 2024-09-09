@@ -1,13 +1,18 @@
 
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/model/data/kid_info.dart';
+import 'package:ileiwe/app/auth/model/data/login.dart';
 import 'package:ileiwe/app/auth/model/data/register.dart';
 import 'package:ileiwe/app/auth/model/data/user_info.dart';
 import 'package:ileiwe/app/auth/provider/repository/auth_repository_provider.dart';
 import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
+import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/common/returned_status.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ileiwe/cores/routes.dart';
 
 class AuthController {
   const AuthController({required this.ref});
@@ -22,11 +27,6 @@ class AuthController {
 
     final ReturnedStatus responseRegister = await register.register(registerDetail);
 
-    print("get to controller");
-
-    print(responseRegister.otherData);
-
-
     if(responseRegister.success){
         final user = responseRegister.otherData['userInfo'] as UserDetailInfo;
         await ref.read(userStateNotifierProvider.notifier).update(user);
@@ -36,15 +36,30 @@ class AuthController {
 
     return ReturnedStatus(message: "failed", success: false);
 
+  }
 
+  login(Map<String, dynamic> userData, BuildContext context) async {
+    final loginDetail = Login.fromJson(userData);
 
-    // print("after controller");
+    final register = ref.read(firebaseAuthRepositoryProvider);
 
-    // register.register(register);
-    
-    // return const ReturnedStatus(message: "dddddd", success: true);
-    
+    final ReturnedStatus response = await register.login(loginDetail);
+    if(response.success) {
+      final user = response.otherData['userInfo'] as UserDetailInfo;
+        await ref.read(userStateNotifierProvider.notifier).update(user);
 
+        if(user.isPhoneNumberVerified) {
+          return ReturnedStatus(message: "success", success: true);
+        }
+
+        final otp = await resendOTP();
+        if(otp.success && context.mounted) {
+          context.push("${RoutesName.verifyAccount}/${otp.otherData['phoneNumberToken']}");          
+        }else {
+          return ReturnedStatus(message: "Error Verifying your account", success: false);
+        }
+    }
+    return response;
   }
 
    Future<ReturnedStatus> verifyPhoneNumber(tokenId, code)async {
@@ -90,6 +105,8 @@ class AuthController {
       
       return ref.read(firebaseAuthRepositoryProvider).registerKid(kidInfo, userId);
    }
+
+   
 
 
 }

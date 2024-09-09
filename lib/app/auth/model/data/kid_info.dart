@@ -15,6 +15,7 @@ class KidInfo with _$KidInfo {
     required String? interestSubject,
     required String? challengingSubject,
     required String? benefit,
+    required int coinEarned
 
   }) = _KidInfo;
 

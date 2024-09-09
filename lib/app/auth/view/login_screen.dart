@@ -1,49 +1,83 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:ileiwe/app/auth/auth_controller.dart';
 import 'package:ileiwe/app/auth/view/widget/header_content_auth.dart';
 import 'package:ileiwe/app/auth/view/widget/input_field_auth.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 
 import 'package:ileiwe/constant/routes.dart';
+import 'package:ileiwe/cores/common/custom_toast.dart';
+import 'package:ileiwe/cores/common/returned_status.dart';
 import 'package:ileiwe/cores/common/widgets/customer_container.dart';
 import 'package:ileiwe/cores/validator.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     
 
     final formKey = GlobalKey<FormState>();
+    bool loading = false;
+    late AuthController _authController;
 
-    void submitLogin() {
+    void submitLogin() async {
       
        if(formKey.currentState!.validate()){
-        print('validated');
+        setState(() => loading = true);
+
+        final info = {
+          'email': usernameController.value.text,
+          'password': passwordController.value.text
+        };
+        
+
+        final ReturnedStatus response = await _authController.login(info, context);
+
+        if(response.success){
+          CustomToast(Navigator.of(context)).showSuccessMessage(response.message);
+          Future.delayed(500.ms, () {
+            if (context.mounted) {
+              context.replace(RoutesName.homeDashboard);
+            }
+          });
+        }
+        else {
+          CustomToast(Navigator.of(context)).showErrorMessage(response.message);
+        }
+
+        setState(() => loading = false);
        }
-        // if(){
-          
-        // }
     }
+
+    @override
+  void initState() {
+    super.initState();
+    _authController = AuthController(ref: ref);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
 
     return  
     
     ContainerCustom(
-      appBar:Container(
-          
-          decoration: BoxDecoration(color: Colors.white54, borderRadius: BorderRadius.circular(12)),
-          padding: const EdgeInsets.all(5),
-          margin: const EdgeInsets.only(top: 10, left: 20),
-          child: const Icon(Icons.arrow_back_rounded, size: 30, color: Color.fromARGB(255, 79, 6, 91),)),
-       
-    
+      isNotScrollable: true,
       bottomSheet: Container(
+        height: 90,
+    
         margin: const EdgeInsets.only(bottom: 50),
          child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -60,6 +94,7 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ButtonOne(label: "Sign In", 
             width: 250,
+            loading: loading,
             action: () => submitLogin(), border: Border.all(width: 0))
           ],
                ),
@@ -69,6 +104,7 @@ class LoginScreen extends StatelessWidget {
             imageName: 'reading_kid_ladies',
             content: "Welcome back\nGlad to see you\nback"),
           Container(
+            height: MediaQuery.of(context).size.height,
             margin: const EdgeInsets.only(right: 20, left: 20 ),
             child:  Form(
               key: formKey,

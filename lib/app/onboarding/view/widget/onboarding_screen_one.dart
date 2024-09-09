@@ -16,6 +16,7 @@ class OnboardingScreenOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  ContainerCustom(
+      canGoBack: false,
               bottomSheet: OnboardingButtonInfo(
                 title: 'Experience the joy\nof learning,\nAnywhere',
                 subTitle: 'Empower Young Minds \n Through Playful Learning',

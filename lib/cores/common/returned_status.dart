@@ -1,11 +1,12 @@
 
 class ReturnedStatus {
-   ReturnedStatus({required this.message, required this.success, this.otherData = const {}});
+   ReturnedStatus({required this.message, required this.success, this.otherData = const {}, this.data});
 
    String message;
    bool success;
 
   Map<String, dynamic> otherData;
+  var data;
 
 
   // factory ReturnedStatus.fromJson(Map<String, String> json){
