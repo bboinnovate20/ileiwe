@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/view/login_screen.dart';
 import 'package:ileiwe/app/library/data/models/book.dart';
 import 'package:ileiwe/app/library/data/models/e_library_category.dart';
+import 'package:ileiwe/app/library/data/models/video.dart';
 import 'package:ileiwe/app/library/providers/library_provider.dart';
 import 'package:ileiwe/app/library/view/e_book_library_screen.dart';
 import 'package:ileiwe/app/library/view/widget/all_skits.dart';
@@ -35,8 +37,8 @@ class SkitLibraryScreen extends ConsumerStatefulWidget {
 
 class _BooksScreenState extends ConsumerState<SkitLibraryScreen> {
   late TextEditingController _searchController;
-  List<Book> _filteredBooks = [];
-  final List<Book> _allCacheBook = [];
+  List<Video> _filteredSkits = [];
+  List<Video> _allCacheSkit = [];
   Timer? _debounce;
   bool isActive = false;
 
@@ -54,15 +56,15 @@ class _BooksScreenState extends ConsumerState<SkitLibraryScreen> {
   }
 
   void _onSearchChanged(String query) {
-    print(query);
+
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       if (mounted) {
-        print('mounted');
+
         setState(() {
-          _filteredBooks = _allCacheBook .where((book) =>
-            book.name.toLowerCase().contains(query.toLowerCase()) ||
-            book.author.toLowerCase().contains(query.toLowerCase())
+          _filteredSkits = _allCacheSkit .where((skit) =>
+            skit.title.toLowerCase().contains(query.toLowerCase()) ||
+            skit.categoryName.toLowerCase().contains(query.toLowerCase())
           ).toList();
         });
       }
@@ -73,6 +75,7 @@ class _BooksScreenState extends ConsumerState<SkitLibraryScreen> {
   Widget build(BuildContext context) {
     
     final allCategories = ref.watch(skitLibraryCategoryProvider(limit: false));
+    final allSkits =  ref.watch(getAllVideoLibraryProvider(limit: false));
 
     return AppContainer(
       canGoBack: true,
@@ -88,7 +91,7 @@ class _BooksScreenState extends ConsumerState<SkitLibraryScreen> {
               onChanged: _onSearchChanged,
             ),
 
-             allCategories.when(
+            _searchController.text.isEmpty ? allCategories.when(
               data: (categories) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical:20),
@@ -149,8 +152,22 @@ class _BooksScreenState extends ConsumerState<SkitLibraryScreen> {
               }, 
               error: (err, _) => errorWidget(), loading: () => loadingWidget()
               
-            ),
-            const Expanded(child: AllSkits())
+            ): Container(),
+
+            allSkits.when(
+              data: (skits){
+                 if(!isActive){
+                      _filteredSkits = skits;
+                   }
+                  _allCacheSkit = skits;
+                   isActive = true;
+                return Expanded(child:  AllSkits(
+                  showHeader: _searchController.text.isEmpty,
+                  skits: _searchController.text.isEmpty ? skits : _filteredSkits));
+              }, 
+              error: (err, _) => errorWidget(), 
+              loading: () => loadingWidget())
+            // const Expanded(child:  AllSkits())
           ],
         ),
       ),

@@ -1,27 +1,35 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:ileiwe/app/library/data/models/video.dart';
+import 'package:ileiwe/app/library/providers/library_provider.dart';
+import 'package:ileiwe/app/library/view/widget/video_card.dart';
+import 'package:ileiwe/cores/common/widgets/loading.dart';
 // import 'package:ileiwe/cores/common/widgets/network_image.dart';
-// import 'package:youtube_player_iframe/youtube_player_iframe.dart'; 
+import 'package:youtube_player_iframe/youtube_player_iframe.dart'; 
 
-class AllSkits extends StatefulWidget {
+class AllSkits extends ConsumerStatefulWidget {
   const AllSkits({
     super.key,
+    required this.skits,
+    required this.showHeader
   });
 
+  final List<Video> skits;
+  final bool showHeader;
+
   @override
-  State<AllSkits> createState() => _AllSkitsState();
+  ConsumerState<AllSkits> createState() => _AllSkitsState();
 }
 
-class _AllSkitsState extends State<AllSkits> {
+class _AllSkitsState extends ConsumerState<AllSkits> {
 
-  // final controller = YoutubePlayerController(); 
-
+  int active = 0;
 
   @override
   void initState() {
     super.initState();
-    //  controller.loadVideoById(videoId: "KGD-T3bhFEA");
   }
 
   
@@ -33,8 +41,8 @@ class _AllSkitsState extends State<AllSkits> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 30,
+          widget.showHeader ? Container(
+            height: 40,
             decoration:  BoxDecoration(
               border: Border.all(color: Theme.of(context).colorScheme.secondary),
               borderRadius: BorderRadius.circular(10)
@@ -42,85 +50,74 @@ class _AllSkitsState extends State<AllSkits> {
             clipBehavior: Clip.hardEdge,
             child:  Row(
               children: [
-                _tabHeader(context, "Recommended", isActive: true, flex: 5),
+                _tabHeader(context, "Recommended", isActive: active==0, flex: 5, action: () => setState(() => active = 0) ),
                 
-                _tabHeader(context, "Featured", isActive: false, centered: true, flex: 4),
+                _tabHeader(context, "Featured", isActive: active==1, centered: true, flex: 4, action: () => setState(() => active = 1)),
                 
-                _tabHeader(context, "Popular", isActive: false ,flex: 4)
+                _tabHeader(context, "Popular", isActive: active==2 ,flex: 4, action: () => setState(() => active = 2))
               ],
-            ),
-          ),
-          //  SizedBox(
-          //   height: 400,
-          //    child: YoutubePlayer( 
-          //     controller: controller, // Controler that we created earlier 
-          //     aspectRatio: 16 / 9,      // Aspect ratio you want to take in screen 
-          //              ),
-          //  ),
+            ) ,
+          ): const Gap(10),
+           
            Expanded(
-             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child:          SizedBox(
-                              height: 500,
-                              child:GridView.count(
-                                physics: const NeverScrollableScrollPhysics(),
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: 1 / 2.25,
-                                children: List.generate(3, (index) {
-                                  // final bk = books[index];
-                                  return Column(
-                                    children: [
-                                      Container(
-                                        height: 150,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(100),
-                                          color: Colors.blue, 
-                                        ),
-                                        
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(10),
-                                          child: const Text("dddd"))
-                                      ),
-                                      const Gap(10),
-                                      const Text("bk.name", style: TextStyle(fontWeight: FontWeight.bold),), // Example text with index
-                                    ],
-                                  );
-                                }),
-                              )
-             
-                            )
-             
-                     ,
-              ),
-                       ),
-           ),
+             child: Padding(
+               padding: const EdgeInsets.only(top: 20.0),
+               child:          SizedBox(
+                             height: 500,
+                             child:GridView.count(
+                               
+                               crossAxisCount: 2,
+                               crossAxisSpacing: 10,
+                               mainAxisSpacing: 20,
+                               childAspectRatio: 1.15 / 1.45,
+                               children: List.generate(widget.skits.length, (index) {
+                                 final skit = widget.skits[index];
+                                 return Column(
+                                   children: [
+                                     ClipRRect(
+                                       borderRadius: BorderRadius.circular(10),
+                                       child: SizedBox(
+                                         // height: 10,
+                                         child: videoThumbnail(context,  Video(id: skit.id, categoryName: skit.categoryName, 
+                                         thumbnailUrl: skit.thumbnailUrl, videoId: skit.videoId, title: skit.title)))),
+                                     // const Gap(10),
+                                   ],
+                                 );
+                               }),
+                             )
+                          
+                           ),
+             )
+              
+            )
+          
         ],
       ),
     );
   }
 
+
   Widget _tabHeader(BuildContext context, 
-    String title, {isActive=false, centered=false, flex=1} ) {
+    String title, {isActive=false, centered=false, flex=1, required void Function() action} ) {
     return Expanded(
       flex: flex,
-      child: Container(
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-              border: centered ? Border.symmetric(vertical: 
-                      BorderSide(color: Theme.of(context).colorScheme.secondary)) 
-                      : Border.all(width: 0, color: Colors.transparent),
-              color: isActive ? Theme.of(context).colorScheme.secondary : Colors.transparent,
-        ),
-                  child:  Align(
-                    alignment: Alignment.center,
-                    child: Text(title, style:  
-                      TextStyle(color: isActive ? Colors.white : Colors.black),)),
-                ),
+      child: GestureDetector(
+        onTap: () => action(),
+        child: Container(
+          // height: 100,
+          padding: const EdgeInsets.symmetric(horizontal: 10,),
+          decoration: BoxDecoration(
+                border: centered ? Border.symmetric(vertical: 
+                        BorderSide(color: Theme.of(context).colorScheme.secondary)) 
+                        : Border.all(width: 0, color: Colors.transparent),
+                color: isActive ? Theme.of(context).colorScheme.secondary : Colors.transparent,
+          ),
+                    child:  Align(
+                      alignment: Alignment.center,
+                      child: Text(title, style:  
+                        TextStyle(color: isActive ? Colors.white : Colors.black),)),
+                  ),
+      ),
     );
   }
 }

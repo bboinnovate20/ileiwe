@@ -7,11 +7,13 @@ import 'package:ileiwe/app/auth/view/register_screen.dart';
 import 'package:ileiwe/app/auth/view/verification_screen.dart';
 import 'package:ileiwe/app/dashboard/view/home_screen.dart';
 import 'package:ileiwe/app/library/data/models/book.dart';
+import 'package:ileiwe/app/library/data/models/video.dart';
 import 'package:ileiwe/app/library/view/books_screen.dart';
 import 'package:ileiwe/app/library/view/category_screen.dart';
 import 'package:ileiwe/app/library/view/e_book_library_screen.dart';
 import 'package:ileiwe/app/library/view/single_book_intro.dart';
 import 'package:ileiwe/app/library/view/skit_library_screen.dart';
+import 'package:ileiwe/app/library/view/video_player_screen.dart';
 import 'package:ileiwe/app/messages/view/chat_screen.dart';
 import 'package:ileiwe/app/messages/view/message_screen.dart';
 import 'package:ileiwe/app/notifications/views/notification_screen.dart';
@@ -150,6 +152,10 @@ final router = GoRouter(
     GoRoute(
       path: RoutesName.skitLibrary,
       builder: (context, state) =>  const SkitLibraryScreen(),
+    ),
+    GoRoute(
+      path: RoutesName.videoScreen,
+      builder: (context, state) =>   VideoPlayerScreen(video: state.extra as Video),
     ),
    
   ],);

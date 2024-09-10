@@ -1,13 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
-import 'package:ileiwe/app/auth/view/kid_detail_screen.dart';
-import 'package:ileiwe/app/auth/view/widget/header_content_auth.dart';
-import 'package:ileiwe/app/dashboard/view/home_screen.dart';
 import 'package:ileiwe/app/dashboard/view/widgets/persistent_header.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 import 'package:ileiwe/app/quizes/models/data/skills.dart';
@@ -15,6 +11,7 @@ import 'package:ileiwe/app/quizes/providers/skills_provider.dart';
 import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/common/assessment.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
+import 'package:ileiwe/cores/common/widgets/loading.dart';
 
 
 
@@ -23,8 +20,6 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-   
 
     final List<Map<String, dynamic>> explore = [
           {
@@ -51,14 +46,11 @@ class DashboardScreen extends ConsumerWidget {
             'imageName': "note",
             
           }
-
     ];
 
-     final allSkills = ref.watch(skillsLearningProvider);
+    final allSkills = ref.watch(skillsLearningProvider);
 
     return AppContainer(
-           
-
             child: SafeArea(
               child: CustomScrollView(
                 slivers: [
@@ -67,8 +59,8 @@ class DashboardScreen extends ConsumerWidget {
                     delegate: StickyHeaderDelegate(
                       child: TopHeader(name: ref.watch(userStateNotifierProvider).firstName, 
                                 coinEarned: ref.watch(userStateNotifierProvider).kidInfo?.coinEarned ?? 0 ,),
-                      maxHeight: 60, // Adjust this value based on your TopHeader height
-                      minHeight: 60,  // Minimum height when fully collapsed
+                      maxHeight: 60, 
+                      minHeight: 60, 
                     ),
                   ),
                   SliverToBoxAdapter(
@@ -79,7 +71,7 @@ class DashboardScreen extends ConsumerWidget {
                         
                         SizedBox(
                           height: 220, 
-                child: allSkills.when(data: (skill) {
+                child:  allSkills.when(data: (skill) {
                   return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: (skill['skill'] as List).length,
@@ -101,11 +93,10 @@ class DashboardScreen extends ConsumerWidget {
                   },
                 );
                 }, error: (err, _) {
-                  print(err);
-                  print(_);
-                  return SizedBox(height: 20, width: 20, child: Text("$err"),);
+                  
+                  return errorWidget();
                 }, 
-                      loading: () => const SizedBox(height: 20, width: 20,))
+                      loading: () => loadingWidget())
               ),
                 const SizedBox(height: 25),
                 ExploreFeatures(assessments: explore),

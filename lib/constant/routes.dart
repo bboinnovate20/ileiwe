@@ -21,5 +21,6 @@ abstract class RoutesName {
   static const  eLibraryBookIntro = "/library/categories/books/intro";
 
   static const  skitLibrary = "/library/skitLibrary";
+  static const  videoScreen = "/library/videoScreen";
 
 }

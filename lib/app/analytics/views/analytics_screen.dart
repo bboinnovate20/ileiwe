@@ -9,6 +9,7 @@ import 'package:ileiwe/app/quizes/models/data/skills.dart';
 import 'package:ileiwe/app/quizes/providers/skills_provider.dart';
 import 'package:ileiwe/cores/common/assessment.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
+import 'package:ileiwe/cores/common/widgets/loading.dart';
 import 'package:ileiwe/cores/common/widgets/top_nav.dart';
 import 'package:ileiwe/cores/utils/get_percentage.dart';
 
@@ -75,7 +76,7 @@ class AnalyticsScreen extends ConsumerWidget {
                     
                     ]
           );
-          }, error: (_,n) => const Text("Loading"), loading: () => const Text("loading"))
+          }, error: (_,n) => errorWidget(), loading: () => loadingWidget())
         )));
   }
 }

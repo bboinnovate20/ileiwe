@@ -15,13 +15,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // List of widgets to display based on the selected index
-  final List<Widget> _screens = [
-    const DashboardScreen(),
-    const GameScreen(), 
-    const AnalyticsScreen(),
-    const ProfileScreen(),
-  ];
+  Widget _getSelectedScreen() {
+    switch (_selectedIndex) {
+      case 0:
+        return const DashboardScreen();
+      case 1:
+        return const GameScreen();
+      case 2:
+        return const AnalyticsScreen();
+      case 3:
+        return const ProfileScreen();
+      default:
+        return const DashboardScreen();
+    }
+  }
 
   void _onItemSelected(int index) {
     setState(() {
@@ -36,10 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       extendBody: true,
       body: Stack(
         children: [
-          IndexedStack(
-            index: _selectedIndex,
-            children: _screens,
-          ),
+          _getSelectedScreen(),
           Positioned(
             left: 0,
             right: 0,

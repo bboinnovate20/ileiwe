@@ -102,6 +102,37 @@ class LibraryRepository {
   }
 
 
+  Future<ReturnedStatus> getSkitVideo( {limit = true}) async {
+      try {
+          QuerySnapshot reference;
+        // if(limit) {
+          reference = await firestore.collection("videos").where("libraryId", isEqualTo: data[1]).get();
+
+        // }
+        // else {
+        //   reference = await firestore.collection("books").get();
+        // }
+        List<Map<String, dynamic>>  skits = [];
+
+          for (var book in reference.docs) {
+              final bookInfo = book.data() as Map;
+
+              final myCategoryName = await firestore.collection("libraries").doc(data[1]).collection('skit').doc("8RwFNYbPNgewyA7Abxn5").get();
+              final name = myCategoryName.data() as Map;
+              
+              skits.add({"id": book.id, ...bookInfo, "categoryName": name['name']});
+          }
+
+
+        return ReturnedStatus(message: "", success: true, data: skits );
+
+      } catch (e) {
+        print("$e error");
+        return ReturnedStatus(message: "error $e", success: false);
+      }
+    }
+
+
 
 
 

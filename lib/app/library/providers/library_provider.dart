@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ileiwe/app/analytics/models/providers/analytics_provider.dart';
 import 'package:ileiwe/app/library/data/models/book.dart';
 import 'package:ileiwe/app/library/data/models/e_library_category.dart';
+import 'package:ileiwe/app/library/data/models/video.dart';
 import 'package:ileiwe/app/library/data/repositories/library_repository.dart';
 import 'package:ileiwe/app/library/view/e_book_library_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -115,6 +116,26 @@ Future<List<ESkitCategory>> skitLibraryCategory(SkitLibraryCategoryRef ref, {lim
         }
         return  [];
     } catch (e) {return  [];}
+}
+
+@riverpod
+Future<List<Video>> getAllVideoLibrary(GetAllVideoLibraryRef ref, {limit=true}) async {
+  
+    final response = await ref.read(libraryRepositoryProvider).getSkitVideo(limit: limit);
+    
+    try {
+        if(response.success) {  
+          List<Video> skits = [];
+
+          for (var skit in response.data) {
+                skits.add(Video.fromJson(skit));
+          }
+          print('skits');
+          // print(skits);
+          return skits;
+        }
+        return  [];
+    } catch (e) {print('dddd $e'); return  [];}
 }
 
 

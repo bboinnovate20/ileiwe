@@ -342,7 +342,7 @@ class _ELibraryCategoryProviderElement
 }
 
 String _$skitLibraryCategoryHash() =>
-    r'27ec0992c567be50c245dff7e4428097f614c7bf';
+    r'750278fe23e874e99445f0d43d39485f3952f03d';
 
 /// See also [skitLibraryCategory].
 @ProviderFor(skitLibraryCategory)
@@ -473,6 +473,137 @@ class _SkitLibraryCategoryProviderElement
 
   @override
   dynamic get limit => (origin as SkitLibraryCategoryProvider).limit;
+}
+
+String _$getAllVideoLibraryHash() =>
+    r'93e1ab3d275070d69ee6a4d037fc642eefa7c65c';
+
+/// See also [getAllVideoLibrary].
+@ProviderFor(getAllVideoLibrary)
+const getAllVideoLibraryProvider = GetAllVideoLibraryFamily();
+
+/// See also [getAllVideoLibrary].
+class GetAllVideoLibraryFamily extends Family<AsyncValue<List<Video>>> {
+  /// See also [getAllVideoLibrary].
+  const GetAllVideoLibraryFamily();
+
+  /// See also [getAllVideoLibrary].
+  GetAllVideoLibraryProvider call({
+    dynamic limit = true,
+  }) {
+    return GetAllVideoLibraryProvider(
+      limit: limit,
+    );
+  }
+
+  @override
+  GetAllVideoLibraryProvider getProviderOverride(
+    covariant GetAllVideoLibraryProvider provider,
+  ) {
+    return call(
+      limit: provider.limit,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getAllVideoLibraryProvider';
+}
+
+/// See also [getAllVideoLibrary].
+class GetAllVideoLibraryProvider
+    extends AutoDisposeFutureProvider<List<Video>> {
+  /// See also [getAllVideoLibrary].
+  GetAllVideoLibraryProvider({
+    dynamic limit = true,
+  }) : this._internal(
+          (ref) => getAllVideoLibrary(
+            ref as GetAllVideoLibraryRef,
+            limit: limit,
+          ),
+          from: getAllVideoLibraryProvider,
+          name: r'getAllVideoLibraryProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getAllVideoLibraryHash,
+          dependencies: GetAllVideoLibraryFamily._dependencies,
+          allTransitiveDependencies:
+              GetAllVideoLibraryFamily._allTransitiveDependencies,
+          limit: limit,
+        );
+
+  GetAllVideoLibraryProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.limit,
+  }) : super.internal();
+
+  final dynamic limit;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Video>> Function(GetAllVideoLibraryRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetAllVideoLibraryProvider._internal(
+        (ref) => create(ref as GetAllVideoLibraryRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        limit: limit,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Video>> createElement() {
+    return _GetAllVideoLibraryProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetAllVideoLibraryProvider && other.limit == limit;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, limit.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin GetAllVideoLibraryRef on AutoDisposeFutureProviderRef<List<Video>> {
+  /// The parameter `limit` of this provider.
+  dynamic get limit;
+}
+
+class _GetAllVideoLibraryProviderElement
+    extends AutoDisposeFutureProviderElement<List<Video>>
+    with GetAllVideoLibraryRef {
+  _GetAllVideoLibraryProviderElement(super.provider);
+
+  @override
+  dynamic get limit => (origin as GetAllVideoLibraryProvider).limit;
 }
 
 String _$booksHash() => r'58f62b5d5f876692f8db960f5119eee017b1a434';
