@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ileiwe/app/onboarding/view/onboarding_screen.dart';
 import 'package:ileiwe/app/onboarding/view/widget/onboarding_bottom_info.dart';
+import 'package:ileiwe/cores/common/speak.dart';
 import 'package:ileiwe/cores/common/widgets/customer_container.dart';
 
 class OnboardingScreenOne extends StatelessWidget {
@@ -15,6 +16,7 @@ class OnboardingScreenOne extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // playMusic("sounds/pop.mp3");
     return  ContainerCustom(
       canGoBack: false,
               bottomSheet: OnboardingButtonInfo(

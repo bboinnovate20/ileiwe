@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/onboarding/view/widget/onboarding_screen_one.dart';
 import 'package:ileiwe/app/onboarding/view/widget/onboarding_screen_two.dart';
 import 'package:ileiwe/constant/routes.dart';
+import 'package:ileiwe/cores/common/speak.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -20,6 +21,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    playMusic("sounds/pop.mp3");
     return  active == 1 ? OnboardingScreenOne( 
                 action: () => setState(() => active = 2,),  
                 stateAction: () => setState(() => active = 2,), isActive: active == 1) :

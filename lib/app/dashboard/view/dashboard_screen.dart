@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
+import 'package:ileiwe/app/coinsHistory/provider/coin_history_notifier.dart';
 import 'package:ileiwe/app/dashboard/view/widgets/persistent_header.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 import 'package:ileiwe/app/quizes/models/data/skills.dart';
 import 'package:ileiwe/app/quizes/providers/skills_provider.dart';
 import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/common/assessment.dart';
+import 'package:ileiwe/cores/common/speak.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 import 'package:ileiwe/cores/common/widgets/loading.dart';
 
@@ -20,7 +23,8 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    
+    
     final List<Map<String, dynamic>> explore = [
           {
             'id': "5oTOqxw7sPxlBwmFrg8n",
@@ -39,12 +43,12 @@ class DashboardScreen extends ConsumerWidget {
             "id": "BrTsCPjOp312bQNxHpu0",
             'title': "Stories Library",
             'imageName': "note_flower",
-            
+            'action': () => context.push(RoutesName.storyLibrary)
           },
           {
             'title': "Exclusive Club",
             'imageName': "note",
-            
+            'action': () => context.push(RoutesName.clubLibrary)
           }
     ];
 
@@ -72,6 +76,7 @@ class DashboardScreen extends ConsumerWidget {
                         SizedBox(
                           height: 220, 
                 child:  allSkills.when(data: (skill) {
+                  tts("Welcome back! ${ref.watch(userStateNotifierProvider).firstName}, let's begin the fun learning!");
                   return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: (skill['skill'] as List).length,
@@ -106,7 +111,8 @@ class DashboardScreen extends ConsumerWidget {
                     author: 'Meredith Rusu',
                     coverImagePath: 'assets/images/reading_book.png',
                     progress: 0.73,
-                  )
+                  ),
+                const Gap(100)
             ],
           ),
         ),
@@ -136,7 +142,7 @@ class ContinueReadingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 20, left: 20, bottom: 100),
+      margin: const EdgeInsets.only(right: 20, left: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white60,
@@ -363,7 +369,7 @@ class AssessmentSectionCard extends StatelessWidget {
               top: -40,
               right: 0,
               left: 0,
-              child: Image.asset("assets/images/$imageName.png", height: 140).animate().scale(duration: 300.ms))
+              child: Image.asset("assets/images/$imageName.png", height: 140).animate().shake(duration: 800.ms).scale(duration: 600.ms))
           ],
         ),
       ),
@@ -447,20 +453,23 @@ class TopHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                margin: const EdgeInsets.only(right: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15)
-                ),
-                child:  Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Image.asset("assets/images/coin_reward.png", height: 25,),
-                    const SizedBox(width: 5,),
-                    Text("$coinEarned", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
-                  ],
+              GestureDetector(
+                onTap: () => context.push(RoutesName.coinHistory),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.asset("assets/images/coin_reward.png", height: 25,),
+                      const SizedBox(width: 5,),
+                      Text("$coinEarned", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -473,7 +482,7 @@ class TopHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(13)
                 ),
                 child:  GestureDetector(
-                  onTap: () => context.push(RoutesName.notification),
+                  onTap: () => context.push(RoutesName.messages),
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -495,17 +504,20 @@ class TopHeader extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(13)
                 ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    SvgPicture.asset("assets/icons/notification.svg", height: 19,),
-                    Positioned(
-                      right: -2,
-                      top: -3,
-                      child: Container(decoration:  BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(30)), 
-                                padding: const EdgeInsets.all(5),),
-                    )
-                  ],
+                child: GestureDetector(
+                  onTap: () => context.push(RoutesName.notification),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      SvgPicture.asset("assets/icons/notification.svg", height: 19,),
+                      Positioned(
+                        right: -2,
+                        top: -3,
+                        child: Container(decoration:  BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(30)), 
+                                  padding: const EdgeInsets.all(5),),
+                      )
+                    ],
+                  ),
                 ),
               ),
 

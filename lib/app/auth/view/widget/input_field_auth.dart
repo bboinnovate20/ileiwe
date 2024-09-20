@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ileiwe/cores/extension.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+
 
 class InputFieldAuth extends StatelessWidget {
   const InputFieldAuth({
@@ -21,7 +24,8 @@ class InputFieldAuth extends StatelessWidget {
     this.labelStyle,
     this.onChange,
     this.initialValue,
-    this.textStyle
+    this.textStyle,
+    this.isPhoneField = false
   });
 
   final double bottomMargin;
@@ -41,10 +45,12 @@ class InputFieldAuth extends StatelessWidget {
   final void Function(String)? onChange;
   final String? initialValue;
   final TextStyle? textStyle;
+  final bool isPhoneField;
 
   @override
   Widget build(BuildContext context) {
     bool isHidden = true;
+
     return Container(
       margin: EdgeInsets.only(bottom: bottomMargin),
       // width: MediaQuery.of(context).size.width,
@@ -122,15 +128,13 @@ class InputFieldAuth extends StatelessWidget {
         children: [
           labelText.isNotEmpty ? Text(labelText, style: labelTextStyle ?? const TextStyle(color: Colors.white, fontSize: 18),).padding(bottom: 8, top:20) : 
                 const SizedBox(),
-          TextFormField(
+          !isPhoneField ? TextFormField(
             onChanged: onChange,
             initialValue: initialValue,
             controller: controller,
             validator: validator,
             style: textStyle ?? const TextStyle(color: Colors.white),
-            cursorColor: Colors.white,
-            
-            
+            cursorColor: Colors.white,      
             decoration:  InputDecoration(
               
                 focusedErrorBorder: OutlineInputBorder(
@@ -164,11 +168,56 @@ class InputFieldAuth extends StatelessWidget {
               
             ),
             
-          ),
-        ],
-      ) ,
-    );
-  }
+          ) : IntlPhoneField(
+            pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
+              dropdownTextStyle: const TextStyle(color: Colors.white),
+              
+              languageCode: "en",
+              controller: controller,
+              validator: (phone) => validator(phone?.completeNumber),
+              style: textStyle ?? const TextStyle(color: Colors.white),
+              decoration:  InputDecoration(
+                focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderColor ?? Colors.red), 
+              borderRadius: BorderRadius.circular(20)),
+              suffixIcon: otherSuffix,
+              
+              errorStyle:  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+
+                errorBorder:OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red), 
+              borderRadius: BorderRadius.circular(20)) ,
+            
+              contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
+                borderRadius: BorderRadius.circular(20)),
+              labelStyle:  labelStyle ?? const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+              hintText: hintText,
+              label: Text(label),
+              filled: true,
+              
+              floatingLabelStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+              border: const OutlineInputBorder(
+          
+                borderSide: BorderSide(color: Colors.red, width: 40)),
+             focusedBorder: OutlineInputBorder(  
+                  borderSide: BorderSide(color: borderColor ?? Colors.transparent), 
+                borderRadius: BorderRadius.circular(20)),
+              fillColor: fillColor ?? Colors.white,
+              
+            ),
+            
+              initialCountryCode: '+234',
+              onChanged: (phone) {
+                  if(onChange!= null){
+                    return onChange!(phone.completeNumber);
+                }
+                  
+                 },
+            ),],
+          ),);
+      }
 }
 
 

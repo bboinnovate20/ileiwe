@@ -1,15 +1,20 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
 import 'package:ileiwe/app/auth/view/widget/input_field_auth.dart';
+import 'package:ileiwe/app/coinsHistory/data/models/coin_history.dart';
+import 'package:ileiwe/app/coinsHistory/provider/coin_history_notifier.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
 import 'package:ileiwe/app/quizes/models/data/chapter_quiz.dart';
 import 'package:ileiwe/app/quizes/models/data/question.dart';
 import 'package:ileiwe/app/quizes/models/data/question_option.dart';
 import 'package:ileiwe/app/quizes/quizes_controller.dart';
 import 'package:ileiwe/constant/routes.dart';
+import 'package:ileiwe/cores/common/speak.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 
 class QuizScreen extends ConsumerStatefulWidget {
@@ -68,6 +73,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
                       'wrongAnswer': answerGotWrong,
                       'coinEarned': widget.chapterInfo.coinEarnedPerQuiz
         });
+        final coin = CoinHistory(title: "Quiz", timestamp: DateTime.now().toString(), coinEarned: widget.chapterInfo.coinEarnedPerQuiz);
+        
+        ref.read(coinHistoriesProvider.notifier).addCoin(coin);
 
       setState(() => loading = false);
 
@@ -77,13 +85,21 @@ class _QuizScreenState extends ConsumerState<QuizScreen> {
       
         final controller = QuizzesController(refController: ref);
 
-        if(answerGotWrong > 0) return;
+        if(answerGotWrong > 0) {
+           playMusic("sounds/quiz_fail.mp3");
+          return;   
+      }
 
-        final response = controller.storeKidProgress(skillId: widget.skillId, 
+      // final success = ["sounds/quiz_win_2.mp3", "sounds/quiz_win.mp3"];
+      // final random = Random();
+       
+
+        final response = await controller.storeKidProgress(skillId: widget.skillId, 
                               newCurrentChapter: widget.chapterInfo.id + 1, 
                               coinEarned: widget.chapterInfo.coinEarnedPerQuiz,
                               whatLearnt: whatLearnt, currentChapterId: widget.chapterInfo.id, 
                               userId: ref.read(userStateNotifierProvider).userId);
+        playMusic("sounds/quiz_win_2.mp3");  
         return response;
     }
   

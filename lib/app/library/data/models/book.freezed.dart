@@ -27,6 +27,8 @@ mixin _$Book {
   String get categoryId => throw _privateConstructorUsedError;
   String get libraryCategoryId => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  bool get isPremium => throw _privateConstructorUsedError;
+  num get totalReaders => throw _privateConstructorUsedError;
 
   /// Serializes this Book to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +51,9 @@ abstract class $BookCopyWith<$Res> {
       String imagePath,
       String categoryId,
       String libraryCategoryId,
-      String description});
+      String description,
+      bool isPremium,
+      num totalReaders});
 }
 
 /// @nodoc
@@ -74,6 +78,8 @@ class _$BookCopyWithImpl<$Res, $Val extends Book>
     Object? categoryId = null,
     Object? libraryCategoryId = null,
     Object? description = null,
+    Object? isPremium = null,
+    Object? totalReaders = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -104,6 +110,14 @@ class _$BookCopyWithImpl<$Res, $Val extends Book>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      isPremium: null == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
+              as bool,
+      totalReaders: null == totalReaders
+          ? _value.totalReaders
+          : totalReaders // ignore: cast_nullable_to_non_nullable
+              as num,
     ) as $Val);
   }
 }
@@ -122,7 +136,9 @@ abstract class _$$BookImplCopyWith<$Res> implements $BookCopyWith<$Res> {
       String imagePath,
       String categoryId,
       String libraryCategoryId,
-      String description});
+      String description,
+      bool isPremium,
+      num totalReaders});
 }
 
 /// @nodoc
@@ -144,6 +160,8 @@ class __$$BookImplCopyWithImpl<$Res>
     Object? categoryId = null,
     Object? libraryCategoryId = null,
     Object? description = null,
+    Object? isPremium = null,
+    Object? totalReaders = null,
   }) {
     return _then(_$BookImpl(
       name: null == name
@@ -174,6 +192,14 @@ class __$$BookImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      isPremium: null == isPremium
+          ? _value.isPremium
+          : isPremium // ignore: cast_nullable_to_non_nullable
+              as bool,
+      totalReaders: null == totalReaders
+          ? _value.totalReaders
+          : totalReaders // ignore: cast_nullable_to_non_nullable
+              as num,
     ));
   }
 }
@@ -188,7 +214,9 @@ class _$BookImpl with DiagnosticableTreeMixin implements _Book {
       required this.imagePath,
       required this.categoryId,
       required this.libraryCategoryId,
-      required this.description});
+      required this.description,
+      required this.isPremium,
+      required this.totalReaders});
 
   factory _$BookImpl.fromJson(Map<String, dynamic> json) =>
       _$$BookImplFromJson(json);
@@ -207,10 +235,14 @@ class _$BookImpl with DiagnosticableTreeMixin implements _Book {
   final String libraryCategoryId;
   @override
   final String description;
+  @override
+  final bool isPremium;
+  @override
+  final num totalReaders;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Book(name: $name, id: $id, author: $author, imagePath: $imagePath, categoryId: $categoryId, libraryCategoryId: $libraryCategoryId, description: $description)';
+    return 'Book(name: $name, id: $id, author: $author, imagePath: $imagePath, categoryId: $categoryId, libraryCategoryId: $libraryCategoryId, description: $description, isPremium: $isPremium, totalReaders: $totalReaders)';
   }
 
   @override
@@ -224,7 +256,9 @@ class _$BookImpl with DiagnosticableTreeMixin implements _Book {
       ..add(DiagnosticsProperty('imagePath', imagePath))
       ..add(DiagnosticsProperty('categoryId', categoryId))
       ..add(DiagnosticsProperty('libraryCategoryId', libraryCategoryId))
-      ..add(DiagnosticsProperty('description', description));
+      ..add(DiagnosticsProperty('description', description))
+      ..add(DiagnosticsProperty('isPremium', isPremium))
+      ..add(DiagnosticsProperty('totalReaders', totalReaders));
   }
 
   @override
@@ -242,13 +276,17 @@ class _$BookImpl with DiagnosticableTreeMixin implements _Book {
             (identical(other.libraryCategoryId, libraryCategoryId) ||
                 other.libraryCategoryId == libraryCategoryId) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.isPremium, isPremium) ||
+                other.isPremium == isPremium) &&
+            (identical(other.totalReaders, totalReaders) ||
+                other.totalReaders == totalReaders));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, id, author, imagePath,
-      categoryId, libraryCategoryId, description);
+      categoryId, libraryCategoryId, description, isPremium, totalReaders);
 
   /// Create a copy of Book
   /// with the given fields replaced by the non-null parameter values.
@@ -274,7 +312,9 @@ abstract class _Book implements Book {
       required final String imagePath,
       required final String categoryId,
       required final String libraryCategoryId,
-      required final String description}) = _$BookImpl;
+      required final String description,
+      required final bool isPremium,
+      required final num totalReaders}) = _$BookImpl;
 
   factory _Book.fromJson(Map<String, dynamic> json) = _$BookImpl.fromJson;
 
@@ -292,6 +332,10 @@ abstract class _Book implements Book {
   String get libraryCategoryId;
   @override
   String get description;
+  @override
+  bool get isPremium;
+  @override
+  num get totalReaders;
 
   /// Create a copy of Book
   /// with the given fields replaced by the non-null parameter values.

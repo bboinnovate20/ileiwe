@@ -1,6 +1,8 @@
 
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ileiwe/app/auth/model/data/kid_info.dart';
+import 'package:ileiwe/app/auth/provider/repository/auth_repository_provider.dart';
 import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
 import 'package:ileiwe/app/quizes/models/data/chapter_quiz.dart';
 import 'package:ileiwe/app/quizes/models/data/question.dart';
@@ -69,6 +71,13 @@ class QuizzesController {
 
     final ReturnedStatus submitQuiz = await response.updateKidProgress(skillId: skillId, newCurrentChapter: newCurrentChapter, 
           coinEarned: coinEarned, whatLearnt: whatLearnt, currentChapterId: currentChapterId, userId: userId);
+    
+    final userInfo = refController.read(userStateNotifierProvider);
+    final isKidExist = await refController.read(firebaseAuthRepositoryProvider).getKid(userInfo.userId);
+    final kidInfo = KidInfo.fromJson(isKidExist.otherData['data']);
+    userInfo.kidInfo = kidInfo;
+
+    refController.read(userStateNotifierProvider.notifier).update(userInfo);
     
     return submitQuiz;
     

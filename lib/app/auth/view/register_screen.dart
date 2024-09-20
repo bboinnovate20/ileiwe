@@ -24,7 +24,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final TextEditingController firstNameController = TextEditingController();
     final TextEditingController lastNameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
-    final TextEditingController phoneNumberController = TextEditingController();
+    TextEditingController phoneNumberController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController passwordConfirmationController = TextEditingController();
 
@@ -123,14 +123,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     label: "Enter Email", 
                     validator: (value) => isValidEmail(value!), 
                     controller: emailController),
+                    
                       
                   InputFieldAuth(
                     fillColor: Colors.white30,
                     textColor: Colors.white,
+                    isPhoneField: true,
                     keyboardType: TextInputType.phone,
                     label: "Enter Phone Number", 
+                    onChange: (phone) => 
+                          phoneNumberController.value = phoneNumberController.value.copyWith(text: phone),
                     validator: (value) => isValidPhoneNumber(value!), 
-                    controller: phoneNumberController),
+                    // controller: phoneNumberController
+                    ),
                   
                   InputFieldAuth(
                     fillColor: Colors.white30,

@@ -15,7 +15,9 @@ class Book with _$Book {
     required String imagePath,
     required String categoryId,
     required String libraryCategoryId,
-    required String description
+    required String description,
+    required bool isPremium,
+    required num totalReaders
   }) = _Book;
 
   factory Book.fromJson(Map<String, Object?> json)

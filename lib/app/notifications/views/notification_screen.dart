@@ -33,7 +33,7 @@ class _EditProfileState extends ConsumerState<NotificationScreen> {
     return  AppContainer(
           addHeader: true,
           // singleHeader:
-          title: "Messages",
+          title: "Notifications",
           children: [
             
             SliverPadding(

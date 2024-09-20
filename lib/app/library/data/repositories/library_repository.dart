@@ -17,6 +17,8 @@ class LibraryRepository {
   final data = [
     "5oTOqxw7sPxlBwmFrg8n", //ebook
     "CWvEczgUa4CLvkjkOipx", //skit
+    "BrTsCPjOp312bQNxHpu0", //stories
+    
   ];
 
   Future<ReturnedStatus> getEBookCategories({limit = true}) async {
@@ -72,16 +74,20 @@ class LibraryRepository {
       return ReturnedStatus(message: "", success: true, data: listOfCategories);
 
     } catch (e) {
+      print("error $e");
       return ReturnedStatus(message: "error $e", success: false);
     }
   }
 
 
 
-  Future<ReturnedStatus> getEBookBook({limit = true}) async {
+  Future<ReturnedStatus> getEBookBook({limit = true, mostPopular=false}) async {
     try {
         QuerySnapshot reference;
-       if(limit) {
+        if(mostPopular) {
+          reference = await firestore.collection("books").where("totalReaders", isGreaterThan: 10).get();
+        }
+       else if(limit) {
        reference = await firestore.collection("books").get();
        }
        else {
@@ -172,6 +178,25 @@ Future<ReturnedStatus> getCategoryBook(libraryId, categoryId, {limit = false}) a
     }
   }
 
+
+    Future<ReturnedStatus> getStories() async {
+    try {
+      
+      final reference = await firestore.collection("books").
+                        where("categoryId", isEqualTo: data[2]).get();
+      
+      List stories = [];
+
+      for (var story in reference.docs) {
+        final imageRef = await firebaseStorage.ref().child("books/${story.id}.png").getDownloadURL();
+        stories.add({...story.data(), "id": story.id, "imagePath": imageRef });
+      }
+
+      return ReturnedStatus(message: "", success: true, data: stories);
+    } catch (e) {
+      return ReturnedStatus(message: "error $e", success: false);
+    }
+  }
   
 
 }

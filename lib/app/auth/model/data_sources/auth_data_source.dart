@@ -53,7 +53,6 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
                 password: userPersonAccountDetail.password,
             );
             
-            
              await instance.currentUser?.updateDisplayName("${userPersonAccountDetail.firstName} ${userPersonAccountDetail.lastName}");
              await instance.currentUser?.reload();
 
@@ -97,18 +96,15 @@ class FirebaseAuthDataSource implements AuthRemoteDataSource {
  @override
   Future<ReturnedStatus> loginUser(Login userPersonAccountDetail) async {
       try {
-            print("credential");
             final UserCredential credential = await instance.signInWithEmailAndPassword(
                 email: userPersonAccountDetail.email,
                 password: userPersonAccountDetail.password,
             );
-            print("$credential credential");
-            print("$credential credential");
-             return ReturnedStatus(message: "Successfully registerd", success: true, otherData: {
+            
+             return ReturnedStatus(message: "Successfully registered", success: true, otherData: {
                 'user': credential.user,
               });
-
-  
+              
         } on FirebaseAuthException catch (e) {
           
           if (e.code == 'weak-password') {

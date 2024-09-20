@@ -9,6 +9,7 @@ import 'package:ileiwe/app/quizes/quizes_controller.dart';
 import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/common/custom_toast.dart';
 import 'package:ileiwe/cores/common/returned_status.dart';
+import 'package:ileiwe/cores/common/speak.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 
 class InstructionScreen extends ConsumerStatefulWidget {
@@ -87,6 +88,7 @@ nextChapter() async {
   void initState() {
     super.initState();
     getCurrentKidStage(widget.skill);
+    playMusic("sounds/intro_quiz.mp3");
   }
 
 

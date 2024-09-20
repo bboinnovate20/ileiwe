@@ -5,14 +5,20 @@ import 'package:ileiwe/app/auth/view/kid_detail_screen.dart';
 import 'package:ileiwe/app/auth/view/login_screen.dart';
 import 'package:ileiwe/app/auth/view/register_screen.dart';
 import 'package:ileiwe/app/auth/view/verification_screen.dart';
+import 'package:ileiwe/app/club/data/models/club.dart';
+import 'package:ileiwe/app/club/view/club_Screen.dart';
+import 'package:ileiwe/app/club/view/club_info.dart';
+import 'package:ileiwe/app/coinsHistory/view/coin_history.dart';
 import 'package:ileiwe/app/dashboard/view/home_screen.dart';
 import 'package:ileiwe/app/library/data/models/book.dart';
 import 'package:ileiwe/app/library/data/models/video.dart';
+import 'package:ileiwe/app/library/view/book_reading.dart';
 import 'package:ileiwe/app/library/view/books_screen.dart';
 import 'package:ileiwe/app/library/view/category_screen.dart';
 import 'package:ileiwe/app/library/view/e_book_library_screen.dart';
 import 'package:ileiwe/app/library/view/single_book_intro.dart';
 import 'package:ileiwe/app/library/view/skit_library_screen.dart';
+import 'package:ileiwe/app/library/view/story_library_screen.dart';
 import 'package:ileiwe/app/library/view/video_player_screen.dart';
 import 'package:ileiwe/app/messages/view/chat_screen.dart';
 import 'package:ileiwe/app/messages/view/message_screen.dart';
@@ -157,5 +163,26 @@ final router = GoRouter(
       path: RoutesName.videoScreen,
       builder: (context, state) =>   VideoPlayerScreen(video: state.extra as Video),
     ),
-   
+    GoRoute(
+      path: RoutesName.clubLibrary,
+      builder: (context, state) =>   const ClubScreen(),
+    ),
+    GoRoute(
+      path: RoutesName.storyLibrary,
+      builder: (context, state) =>   const StoryLibraryScreen(),
+    ),
+
+    GoRoute(
+      path: RoutesName.bookReading,
+      builder: (context, state) =>   BookReading(bookDetail: state.extra as Book),
+    ),
+
+    GoRoute(
+      path: RoutesName.coinHistory,
+      builder: (context, state) =>   const CoinHistoryScreen()
+    ),
+     GoRoute(
+      path: RoutesName.clubInfo,
+      builder: (context, state) =>    ClubInfo(clubDetails: state.extra as Club)
+    ),   
   ],);

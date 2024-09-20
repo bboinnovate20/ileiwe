@@ -22,5 +22,13 @@ abstract class RoutesName {
 
   static const  skitLibrary = "/library/skitLibrary";
   static const  videoScreen = "/library/videoScreen";
+  static const  clubLibrary = "/club";
+
+  static const  storyLibrary = "/library/story";
+  static const bookReading = "/library/reading";
+  
+  static const coinHistory = "/coins";
+  static const clubInfo = "/club/info";
+  // static const  storyLibrary = "/club";
 
 }

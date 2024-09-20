@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ileiwe/app/auth/provider/user_state_notifier.dart';
@@ -121,8 +122,9 @@ class _SuccessScreenState extends ConsumerState<SuccessScreen> {
                       children: [
                         isFailed ? 
                         Text("Don't be sad", style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 32, 
-                          color: Theme.of(context).colorScheme.secondary), textAlign: TextAlign.center, ):
-                        const Text("You Won! Now unlock your access to the Holo Card game and start playing with other achievers!", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+                          color: Theme.of(context).colorScheme.secondary), textAlign: TextAlign.center, ).animate().fadeIn(duration: 500.ms):
+                        const Text("You Won! Now unlock your access to the Holo Card game and start playing with other achievers!", 
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold), textAlign: TextAlign.center, ).animate().fadeIn(duration: 500.ms),
                         
                         const SizedBox(height: 15,),
                         const Text("Try Again Now", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
@@ -151,7 +153,7 @@ class _SuccessScreenState extends ConsumerState<SuccessScreen> {
                                   
                                  Text("${widget.coinEarned} Coin", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),)
                               ],
-                            ),),
+                            ),).animate().scale(begin: const Offset(2,2), end: const Offset(1,1)).fadeIn(duration: 500.ms),
                           ],
                         ),
                        
@@ -164,7 +166,8 @@ class _SuccessScreenState extends ConsumerState<SuccessScreen> {
                     right: 0,
                     left: 0,
 
-                    child: isFailed ? Image.asset("assets/images/nice_try.png", height: 280) : Image.asset("assets/images/win_awesome.png", height: 170),
+                    child: isFailed ? Image.asset("assets/images/nice_try.png", height: 280).animate().shimmer(duration: 1000.ms) : 
+                    Image.asset("assets/images/win_awesome.png", height: 170).animate().shimmer(duration: 1000.ms),
                   )
               ],
             ),
@@ -190,7 +193,8 @@ class _SuccessScreenState extends ConsumerState<SuccessScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text("Right Answer", style: TextStyle(color: Colors.white, fontSize: 14),),
-              Text("$rightAnswer", style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 35, color: Colors.white)),
+              Text("$rightAnswer", style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 35, color: Colors.white)).animate().color(begin: Colors.pink, end: Colors.transparent)
+              .scale(begin: const Offset(3,3), end: const Offset(1,1)).fadeIn(duration: 500.ms),
             ],
           ),
         ),
@@ -209,7 +213,9 @@ class _SuccessScreenState extends ConsumerState<SuccessScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text("Wrong Answer", style: TextStyle(color: Colors.white, fontSize: 14),),
-              Text("$wrongAnswer", style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 35, color: Colors.white)),
+              Text("$wrongAnswer", style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 35, color: Colors.white)).animate()
+              .color(begin: Colors.pink, end: Colors.transparent)
+              .scale(begin: const Offset(3,3), end: const Offset(1,1)).fadeIn(duration: 500.ms),
             ],
           ),
         ),

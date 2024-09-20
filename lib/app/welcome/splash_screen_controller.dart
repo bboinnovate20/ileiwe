@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,5 +58,12 @@ class SplashScreenController {
     
   }
 
+
+  playAudio() async{
+    final player = AudioPlayer();
+     await player.play(AssetSource('sounds/intro.wav'));
+    // await player.play(DeviceFileSource('assets/sounds/intro.wav')); 
+    
+  }
 
 }

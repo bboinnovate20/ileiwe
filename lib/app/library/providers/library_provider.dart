@@ -130,13 +130,14 @@ Future<List<Video>> getAllVideoLibrary(GetAllVideoLibraryRef ref, {limit=true}) 
           for (var skit in response.data) {
                 skits.add(Video.fromJson(skit));
           }
-          print('skits');
+          
           // print(skits);
           return skits;
         }
         return  [];
     } catch (e) {print('dddd $e'); return  [];}
 }
+
 
 
 
@@ -155,6 +156,40 @@ Future<List<Book>> books(BooksRef ref, {limit=true}) async {
     else {
       return  [];
     }
+}
+
+@riverpod
+Future<Map<String, dynamic>>  storyBooksAndCategory(StoryBooksAndCategoryRef ref) async {
+    final response = await ref.read(libraryRepositoryProvider).getStories();
+
+    final responseCatg = await ref.read(libraryRepositoryProvider).getEBookCategories(limit: true);
+       final response2 = await ref.read(libraryRepositoryProvider).getEBookBook(mostPopular: true);
+    
+   
+
+        List<Book> stories = [];
+        List<ELibraryCategory> categories = [];
+        List<Book> books = [];
+
+          for (var category in response2.data) {
+                books.add(Book.fromJson(category));
+          }
+
+          
+          for (var category in responseCatg.data) {
+                categories.add(ELibraryCategory.fromJson(category));
+          }
+      for (var category in response.data) {
+          
+            stories.add(Book.fromJson(category));
+      }
+  
+      return {
+        'stories': stories,
+        'categories': categories,
+        'books': books
+        };
+   
 }
 
 

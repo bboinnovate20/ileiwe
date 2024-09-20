@@ -42,7 +42,7 @@ class SubscriptionPricingScreen extends StatelessWidget {
       "30 days book rentals",  
       "Access to Exclusive Content days book rentals",  
     ];
-    print(canGoBack);
+    
     return  ContainerCustom(
       canGoBack: true,
       child:       CustomScrollView(

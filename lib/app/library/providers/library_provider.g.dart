@@ -476,7 +476,7 @@ class _SkitLibraryCategoryProviderElement
 }
 
 String _$getAllVideoLibraryHash() =>
-    r'93e1ab3d275070d69ee6a4d037fc642eefa7c65c';
+    r'4efab431ae77b447886ad589982cb83acfc389fc';
 
 /// See also [getAllVideoLibrary].
 @ProviderFor(getAllVideoLibrary)
@@ -733,6 +733,24 @@ class _BooksProviderElement extends AutoDisposeFutureProviderElement<List<Book>>
   dynamic get limit => (origin as BooksProvider).limit;
 }
 
+String _$storyBooksAndCategoryHash() =>
+    r'd9d64526b0d400805a3e0922a782f6b045d232fe';
+
+/// See also [storyBooksAndCategory].
+@ProviderFor(storyBooksAndCategory)
+final storyBooksAndCategoryProvider =
+    AutoDisposeFutureProvider<Map<String, dynamic>>.internal(
+  storyBooksAndCategory,
+  name: r'storyBooksAndCategoryProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$storyBooksAndCategoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef StoryBooksAndCategoryRef
+    = AutoDisposeFutureProviderRef<Map<String, dynamic>>;
 String _$categoryBookHash() => r'860871f98892780752045a0f17c2fa7476d44489';
 
 /// See also [categoryBook].

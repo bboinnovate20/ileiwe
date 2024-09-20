@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ileiwe/app/dashboard/view/dashboard_screen.dart';
 import 'package:ileiwe/app/library/data/models/book.dart';
 import 'package:ileiwe/app/library/providers/library_provider.dart';
 import 'package:ileiwe/app/library/view/widget/custom_search.dart';
 import 'package:ileiwe/app/onboarding/view/widget/button_one.dart';
+import 'package:ileiwe/constant/routes.dart';
 import 'package:ileiwe/cores/common/widgets/app_container.dart';
 import 'package:ileiwe/cores/common/widgets/loading.dart';
 import 'package:ileiwe/cores/common/widgets/network_image.dart';
@@ -59,7 +62,7 @@ class SingleBookIntro extends StatelessWidget {
                   ),
                 ),
                 const Gap(30),
-                Text("Description", 
+                Text("Synopsis", 
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 20),),
                 const Gap(10),
@@ -69,23 +72,7 @@ class SingleBookIntro extends StatelessWidget {
                 const Gap(30), 
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 30),
-                  child:  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                  
-                  ButtonOne(label: "Preview", 
-                  border: Border.all(width: 0),
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  width: double.infinity,),
-                  const Gap(10),
-                  const ButtonOne(label: "Subscribe Now", 
-                  textColor: Colors.black,
-                  bgColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  width: double.infinity,),
-                              
-                    ],
-                  ),
+                  child: bookDetails.isPremium ?  nonPremiumButton(context) : premiumButton(context),
                 )
               ],
             ),
@@ -94,6 +81,47 @@ class SingleBookIntro extends StatelessWidget {
       ),
     );
   }
+
+  Column nonPremiumButton(BuildContext context) {
+    return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                
+                ButtonOne(label: "Preview", 
+                border: Border.all(width: 0),
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                width: double.infinity,),
+                const Gap(10),
+                const ButtonOne(label: "Subscribe Now", 
+                textColor: Colors.black,
+                bgColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 20),
+                width: double.infinity,),
+                            
+                  ],
+                );
+  }
+
+   Column premiumButton(BuildContext context) {
+    return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                
+                GestureDetector(
+                  onTap: () => context.push(RoutesName.bookReading, extra: bookDetails),
+                  child: ButtonOne(label: "Read Now", 
+                  bgColor: Theme.of(context).colorScheme.secondary,
+                  border: Border.all(width: 0),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  width: double.infinity,),
+                ),
+               
+                            
+                  ],
+                );
+  }
+
+
 }
 
 class AllBooks extends StatelessWidget {
